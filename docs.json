@@ -37,13 +37,18 @@
         "group": "Components",
         "pages": [
           "components/overview",
+          "components/header",
+          "components/footer",
           "components/hero",
           "components/features",
           "components/about",
+          "components/video",
+          "components/brands",
           "components/testimonials",
           "components/pricing",
           "components/blog",
-          "components/contact"
+          "components/contact",
+          "components/scroll-up"
         ]
       },
       {

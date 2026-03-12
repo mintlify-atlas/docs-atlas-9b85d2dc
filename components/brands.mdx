@@ -1,0 +1,340 @@
+---
+title: Brands Component
+description: Display partner logos or client brands in a responsive grid layout
+---
+
+The Brands component showcases partner logos, client brands, or technology stack in a responsive grid with automatic dark mode support. Each brand logo includes both light and dark variants for optimal visibility.
+
+## Features
+
+- Responsive grid layout (1-6 columns based on screen size)
+- Automatic dark/light mode logo switching
+- Hover opacity effects
+- External links with proper `rel` attributes
+- Fully typed with TypeScript
+- Easy to customize with brand data array
+
+## Basic Usage
+
+```tsx
+import Brands from "@/components/Brands";
+
+export default function Page() {
+  return (
+    <>
+      <Brands />
+    </>  
+  );
+}
+```
+
+## Data Structure
+
+Brands are defined in `src/components/Brands/brandsData.tsx`:
+
+```tsx
+import { Brand } from "@/types/brand";
+
+const brandsData: Brand[] = [
+  {
+    id: 1,
+    name: "UIdeck",
+    href: "https://uideck.com",
+    image: "/images/brands/uideck.svg",
+    imageLight: "/images/brands/uideck-light.svg",
+  },
+  // More brands...
+];
+
+export default brandsData;
+```
+
+### Brand Type Definition
+
+The `Brand` type is defined in `src/types/brand.ts`:
+
+```tsx
+export type Brand = {
+  id: number;
+  name: string;
+  href: string;
+  image: string;
+  imageLight?: string;
+};
+```
+
+<ParamField path="id" type="number" required>
+  Unique identifier for the brand
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Brand name (used for alt text)
+</ParamField>
+
+<ParamField path="href" type="string" required>
+  External URL to the brand's website
+</ParamField>
+
+<ParamField path="image" type="string" required>
+  Path to the logo image for light mode
+</ParamField>
+
+<ParamField path="imageLight" type="string">
+  Optional path to the logo image for dark mode. If not provided, the same image will be used for both modes.
+</ParamField>
+
+## Customization
+
+### Adding Your Own Brands
+
+Replace the default brands in `brandsData.tsx`:
+
+```tsx src/components/Brands/brandsData.tsx
+import { Brand } from "@/types/brand";
+
+const brandsData: Brand[] = [
+  {
+    id: 1,
+    name: "Your Company",
+    href: "https://yourcompany.com",
+    image: "/images/brands/your-company.svg",
+    imageLight: "/images/brands/your-company-light.svg",
+  },
+  {
+    id: 2,
+    name: "Partner Name",
+    href: "https://partner.com",
+    image: "/images/brands/partner.svg",
+    imageLight: "/images/brands/partner-light.svg",
+  },
+  // Add more brands as needed
+];
+
+export default brandsData;
+```
+
+<Note>
+  Create separate logo versions for light and dark modes to ensure optimal visibility. Use SVG format for crisp rendering at all sizes.
+</Note>
+
+### Grid Layout
+
+The responsive grid automatically adjusts based on screen size:
+
+```tsx
+<div className="flex w-1/2 items-center justify-center px-3 py-[15px] sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
+```
+
+- **Mobile**: `w-1/2` (2 columns)
+- **Small**: `sm:w-1/2` (2 columns)
+- **Medium**: `md:w-1/3` (3 columns)
+- **Large**: `lg:w-1/4` (4 columns)
+- **XL**: `xl:w-1/6` (6 columns)
+
+### Container Styling
+
+The brands are displayed in a styled container:
+
+```tsx
+<div className="flex flex-wrap items-center justify-center rounded-sm bg-gray-light px-8 py-8 dark:bg-gray-dark sm:px-10 md:px-[50px] md:py-[40px] xl:p-[50px] 2xl:px-[70px] 2xl:py-[60px]">
+```
+
+You can customize:
+- **Background**: `bg-gray-light dark:bg-gray-dark`
+- **Padding**: Responsive padding from `px-8 py-8` to `2xl:px-[70px] 2xl:py-[60px]`
+- **Border radius**: `rounded-sm`
+
+### Hover Effects
+
+Logos have subtle opacity effects:
+
+```tsx
+<a className="relative h-10 w-full opacity-70 transition hover:opacity-100 dark:opacity-60 dark:hover:opacity-100">
+```
+
+- **Light mode**: 70% opacity, 100% on hover
+- **Dark mode**: 60% opacity, 100% on hover
+
+## Advanced Customization
+
+### Custom Brand Component
+
+Create a custom version with additional features:
+
+```tsx components/CustomBrands.tsx
+import { Brand } from "@/types/brand";
+import Image from "next/image";
+import brandsData from "./brandsData";
+
+interface BrandsSectionProps {
+  title?: string;
+  description?: string;
+  brands?: Brand[];
+}
+
+export default function CustomBrands({
+  title,
+  description,
+  brands = brandsData,
+}: BrandsSectionProps) {
+  return (
+    <section className="pt-16">
+      <div className="container">
+        {title && (
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-black dark:text-white">
+              {title}
+            </h2>
+            {description && (
+              <p className="text-base text-body-color dark:text-body-color-dark">
+                {description}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="-mx-4 flex flex-wrap">
+          <div className="w-full px-4">
+            <div className="flex flex-wrap items-center justify-center rounded-sm bg-gray-light px-8 py-8 dark:bg-gray-dark sm:px-10 md:px-[50px] md:py-[40px] xl:p-[50px] 2xl:px-[70px] 2xl:py-[60px]">
+              {brands.map((brand) => (
+                <div
+                  key={brand.id}
+                  className="flex w-1/2 items-center justify-center px-3 py-[15px] sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6"
+                >
+                  <a
+                    href={brand.href}
+                    target="_blank"
+                    rel="nofollow noreferrer"
+                    className="relative h-10 w-full opacity-70 transition hover:opacity-100 dark:opacity-60 dark:hover:opacity-100"
+                  >
+                    <Image
+                      src={brand.imageLight || brand.image}
+                      alt={brand.name}
+                      fill
+                      className="hidden dark:block"
+                    />
+                    <Image
+                      src={brand.image}
+                      alt={brand.name}
+                      fill
+                      className="block dark:hidden"
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+Usage with custom title:
+
+```tsx
+<CustomBrands
+  title="Trusted by Industry Leaders"
+  description="Join hundreds of companies that trust our solutions"
+/>
+```
+
+### Different Grid Layouts
+
+For a 3-column fixed layout:
+
+```tsx
+<div className="flex w-1/3 items-center justify-center px-3 py-[15px]">
+  {/* Brand content */}
+</div>
+```
+
+For a 4-column fixed layout:
+
+```tsx
+<div className="flex w-1/4 items-center justify-center px-3 py-[15px]">
+  {/* Brand content */}
+</div>
+```
+
+## SEO Considerations
+
+The component uses proper SEO attributes:
+
+- `rel="nofollow noreferrer"` - Indicates external links
+- `target="_blank"` - Opens links in new tab
+- Descriptive `alt` text using brand names
+
+## Logo Guidelines
+
+<Steps>
+  <Step title="Format">
+    Use SVG format for logos to ensure crisp rendering at all sizes
+  </Step>
+  
+  <Step title="Size">
+    Logos are displayed at a height of 40px (`h-10`). Prepare assets accordingly
+  </Step>
+  
+  <Step title="Color Modes">
+    Create two versions:
+    - **Light mode**: Dark logo on light background
+    - **Dark mode**: Light logo on dark background
+  </Step>
+  
+  <Step title="Naming">
+    Use consistent naming:
+    - `brand-name.svg` for light mode
+    - `brand-name-light.svg` for dark mode
+  </Step>
+</Steps>
+
+## Example: Technology Stack
+
+Use the Brands component to showcase your technology stack:
+
+```tsx
+const techStack: Brand[] = [
+  {
+    id: 1,
+    name: "Next.js",
+    href: "https://nextjs.org",
+    image: "/images/tech/nextjs.svg",
+    imageLight: "/images/tech/nextjs-light.svg",
+  },
+  {
+    id: 2,
+    name: "TypeScript",
+    href: "https://typescriptlang.org",
+    image: "/images/tech/typescript.svg",
+    imageLight: "/images/tech/typescript-light.svg",
+  },
+  {
+    id: 3,
+    name: "Tailwind CSS",
+    href: "https://tailwindcss.com",
+    image: "/images/tech/tailwind.svg",
+    imageLight: "/images/tech/tailwind-light.svg",
+  },
+];
+```
+
+## Accessibility
+
+- Descriptive alt text using brand names
+- Proper link attributes for external links
+- Keyboard navigable links
+- Sufficient color contrast in both modes
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Testimonials" icon="quote-right" href="/components/testimonials">
+    Display customer testimonials and reviews
+  </Card>
+  
+  <Card title="Features" icon="grid" href="/components/features">
+    Showcase your product features
+  </Card>
+</CardGroup>

@@ -1,0 +1,419 @@
+---
+title: ScrollUp Component
+description: Smooth scroll-to-top button that appears after scrolling down the page
+---
+
+The ScrollUp component (also known as ScrollToTop) provides a convenient button that appears when users scroll down, allowing them to quickly return to the top of the page with a smooth animation.
+
+## Features
+
+- Automatic visibility based on scroll position
+- Smooth scroll animation
+- Fixed positioning in bottom-right corner
+- Hover effects with shadow
+- Responsive design
+- High z-index to stay above other content
+- Client-side only component
+
+## Basic Usage
+
+```tsx
+import ScrollToTop from "@/components/ScrollToTop";
+
+export default function Layout({ children }) {
+  return (
+    <>
+      {children}
+      <ScrollToTop />
+    </>
+  );
+}
+```
+
+<Note>
+  This component must be used in a client component or wrapped with `"use client"` since it uses React hooks and browser APIs.
+</Note>
+
+## How It Works
+
+The component uses React hooks to:
+
+1. **Track scroll position**: Listens to window scroll events
+2. **Toggle visibility**: Shows button after scrolling 300px
+3. **Smooth scroll**: Uses `window.scrollTo()` with smooth behavior
+
+```tsx
+const [isVisible, setIsVisible] = useState(false);
+
+useEffect(() => {
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  window.addEventListener("scroll", toggleVisibility);
+  return () => window.removeEventListener("scroll", toggleVisibility);
+}, []);
+```
+
+## Configuration
+
+### Adjusting Visibility Threshold
+
+Change when the button appears by modifying the scroll threshold:
+
+```tsx src/components/ScrollToTop/index.tsx
+const toggleVisibility = () => {
+  if (window.pageYOffset > 500) { // Show after 500px instead of 300px
+    setIsVisible(true);
+  } else {
+    setIsVisible(false);
+  }
+};
+```
+
+<ParamField path="threshold" type="number" default="300">
+  Scroll distance in pixels before the button becomes visible
+</ParamField>
+
+### Changing Position
+
+The button is fixed to the bottom-right corner:
+
+```tsx
+<div className="fixed bottom-8 right-8 z-[99]">
+```
+
+Move to bottom-left:
+
+```tsx
+<div className="fixed bottom-8 left-8 z-[99]">
+```
+
+Move to top-right:
+
+```tsx
+<div className="fixed top-8 right-8 z-[99]">
+```
+
+### Adjusting Size and Style
+
+The button has these default dimensions:
+
+```tsx
+<div
+  onClick={scrollToTop}
+  aria-label="scroll to top"
+  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+>
+```
+
+Make it larger:
+
+```tsx
+className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+```
+
+Make it circular:
+
+```tsx
+className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+```
+
+Change colors:
+
+```tsx
+className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-blue-600 text-white shadow-md transition duration-300 ease-in-out hover:bg-blue-700 hover:shadow-lg"
+```
+
+## Custom Icon
+
+The default icon is a rotated border creating an arrow:
+
+```tsx
+<span className="mt-[6px] h-3 w-3 rotate-45 border-l border-t border-white"></span>
+```
+
+Replace with an SVG icon:
+
+```tsx
+<svg
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  fill="currentColor"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path d="M8 1L8 15M8 1L4 5M8 1L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+```
+
+Or use an icon library like Lucide:
+
+```tsx
+import { ArrowUp } from "lucide-react";
+
+<ArrowUp className="h-4 w-4" />
+```
+
+## Advanced Customization
+
+### Add Animation on Appear
+
+Add a fade-in animation when the button appears:
+
+```tsx
+import { useEffect, useState } from "react";
+
+export default function ScrollToTop() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  return (
+    <div className="fixed bottom-8 right-8 z-[99]">
+      <div
+        className={`transition-all duration-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+        }`}
+      >
+        <div
+          onClick={scrollToTop}
+          aria-label="scroll to top"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+        >
+          <span className="mt-[6px] h-3 w-3 rotate-45 border-l border-t border-white"></span>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### Show Scroll Progress
+
+Display how far down the page the user has scrolled:
+
+```tsx
+import { useEffect, useState } from "react";
+
+export default function ScrollToTopWithProgress() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.pageYOffset / totalHeight) * 100;
+      
+      setScrollProgress(progress);
+      setIsVisible(window.pageYOffset > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div className="fixed bottom-8 right-8 z-[99]">
+      {isVisible && (
+        <div className="relative">
+          {/* Progress ring */}
+          <svg className="absolute inset-0 h-12 w-12" viewBox="0 0 48 48">
+            <circle
+              cx="24"
+              cy="24"
+              r="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="4"
+              className="text-gray-200 dark:text-gray-700"
+            />
+            <circle
+              cx="24"
+              cy="24"
+              r="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="4"
+              strokeDasharray={`${scrollProgress * 1.257} ${125.7 - scrollProgress * 1.257}`}
+              className="text-primary"
+              transform="rotate(-90 24 24)"
+            />
+          </svg>
+          
+          {/* Button */}
+          <div
+            onClick={scrollToTop}
+            aria-label="scroll to top"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+          >
+            <span className="mt-[6px] h-3 w-3 rotate-45 border-l border-t border-white"></span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+<Steps>
+  <Step title="ARIA Label">
+    The button includes `aria-label="scroll to top"` for screen readers
+  </Step>
+  
+  <Step title="Keyboard Support">
+    The button is keyboard accessible (clickable with Enter/Space)
+  </Step>
+  
+  <Step title="Focus Visible">
+    Add focus styles for keyboard navigation:
+    ```tsx
+    className="... focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    ```
+  </Step>
+</Steps>
+
+## Performance Optimization
+
+For better performance with scroll events, add throttling:
+
+```tsx
+import { useEffect, useState, useCallback } from "react";
+
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  return (...args: any[]) => {
+    if (!timeoutId) {
+      timeoutId = setTimeout(() => {
+        func(...args);
+        timeoutId = null;
+      }, delay);
+    }
+  };
+}
+
+export default function ScrollToTop() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const toggleVisibility = useCallback(
+    throttle(() => {
+      if (window.pageYOffset > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    }, 100),
+    []
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, [toggleVisibility]);
+
+  return (
+    <div className="fixed bottom-8 right-8 z-[99]">
+      {isVisible && (
+        <div
+          onClick={scrollToTop}
+          aria-label="scroll to top"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+        >
+          <span className="mt-[6px] h-3 w-3 rotate-45 border-l border-t border-white"></span>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Z-Index Considerations
+
+The button uses `z-[99]` to stay above most content but below modals. Adjust if needed:
+
+- `z-50` - Below most modals
+- `z-[99]` - Default, above content
+- `z-[9999]` - Above everything (use cautiously)
+
+## Common Use Cases
+
+<Tabs>
+  <Tab title="Blog Posts">
+    Add to long blog posts for easy navigation back to top
+  </Tab>
+  
+  <Tab title="Documentation">
+    Help users navigate lengthy documentation pages
+  </Tab>
+  
+  <Tab title="E-commerce">
+    Allow shoppers to quickly return to product filters/navigation
+  </Tab>
+  
+  <Tab title="Landing Pages">
+    Enhance UX on long-form landing pages with multiple sections
+  </Tab>
+</Tabs>
+
+## Browser Support
+
+The smooth scroll behavior is supported in all modern browsers. For older browsers, add a fallback:
+
+```tsx
+const scrollToTop = () => {
+  // Modern browsers
+  if ('scrollBehavior' in document.documentElement.style) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    // Fallback for older browsers
+    window.scrollTo(0, 0);
+  }
+};
+```
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Header" icon="bars" href="/components/header">
+    Main navigation with sticky behavior
+  </Card>
+  
+  <Card title="Footer" icon="bars" href="/components/footer">
+    Site footer with navigation links
+  </Card>
+</CardGroup>

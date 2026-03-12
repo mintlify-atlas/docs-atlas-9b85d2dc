@@ -1,0 +1,278 @@
+---
+title: Video Component
+description: Display a video section with YouTube modal player and custom thumbnail
+---
+
+The Video component creates an engaging video section with a custom thumbnail image and a modal YouTube player. Perfect for showcasing product demos, promotional videos, or company introductions.
+
+## Features
+
+- YouTube video integration via `react-modal-video`
+- Custom thumbnail with play button overlay
+- Responsive design with aspect ratio preservation
+- Decorative SVG background
+- Includes section title with customizable text
+- Smooth modal transitions
+
+## Basic Usage
+
+```tsx
+import Video from "@/components/Video";
+
+export default function Page() {
+  return (
+    <>
+      <Video />
+    </>
+  );
+}
+```
+
+## Component Structure
+
+The Video component is a complete section that includes:
+
+1. **Section Title**: Uses the `SectionTitle` component for consistent heading
+2. **Video Thumbnail**: Displays a custom image (`/images/video/video.webp`)
+3. **Play Button**: Circular overlay button to trigger the modal
+4. **Modal Player**: YouTube video player with autoplay functionality
+5. **Background**: Decorative SVG shape at the bottom
+
+## Default Configuration
+
+By default, the component is configured with:
+
+<ParamField path="videoId" type="string" default="JJ0YAhghSVw">
+  YouTube video ID (currently hardcoded in the component)
+</ParamField>
+
+<ParamField path="channel" type="string" default="youtube">
+  Video platform (YouTube by default)
+</ParamField>
+
+<ParamField path="autoplay" type="boolean" default="true">
+  Video starts playing automatically when modal opens
+</ParamField>
+
+<ParamField path="thumbnail" type="string" default="/images/video/video.webp">
+  Path to the video thumbnail image
+</ParamField>
+
+## Customization
+
+### Changing the Video
+
+To use a different YouTube video, modify the `videoId` in the component:
+
+```tsx src/components/Video/index.tsx
+<ModalVideo
+  channel="youtube"
+  autoplay={true}
+  start={true}
+  isOpen={isOpen}
+  videoId="YOUR_YOUTUBE_VIDEO_ID" // Change this
+  onClose={() => setOpen(false)}
+/>
+```
+
+<Note>
+  To get the video ID from a YouTube URL like `https://youtube.com/watch?v=ABC123`, extract the `ABC123` part.
+</Note>
+
+### Customizing Section Title
+
+Edit the title and paragraph text:
+
+```tsx src/components/Video/index.tsx
+<SectionTitle
+  title="Your Custom Title"
+  paragraph="Your custom description text"
+  center
+  mb="80px"
+/>
+```
+
+### Changing the Thumbnail
+
+Replace the thumbnail image:
+
+```tsx src/components/Video/index.tsx
+<Image 
+  src="/images/video/your-custom-thumbnail.webp" 
+  alt="video thumbnail" 
+  fill 
+/>
+```
+
+### Customizing Play Button
+
+The play button can be styled by modifying its classes:
+
+```tsx
+<button
+  aria-label="video play button"
+  onClick={() => setOpen(true)}
+  className="flex h-[70px] w-[70px] items-center justify-center rounded-full bg-white bg-opacity-75 text-primary transition hover:bg-opacity-100"
+>
+  {/* SVG icon */}
+</button>
+```
+
+You can adjust:
+- Size: `h-[70px] w-[70px]`
+- Background: `bg-white bg-opacity-75`
+- Hover effect: `hover:bg-opacity-100`
+
+### Aspect Ratio
+
+The video container uses a 77:40 aspect ratio:
+
+```tsx
+<div className="relative aspect-[77/40] items-center justify-center">
+  {/* Content */}
+</div>
+```
+
+Change `aspect-[77/40]` to any other ratio like `aspect-video` (16:9) or `aspect-[4/3]`.
+
+## Styling
+
+### Container Spacing
+
+```tsx
+<section className="relative z-10 py-16 md:py-20 lg:py-28">
+```
+
+- Mobile: `py-16` (4rem vertical padding)
+- Tablet: `md:py-20` (5rem)
+- Desktop: `lg:py-28` (7rem)
+
+### Background Shape
+
+The component includes a decorative SVG background:
+
+```tsx
+<div className="absolute bottom-0 left-0 right-0 z-[-1] h-full w-full bg-[url(/images/video/shape.svg)] bg-cover bg-center bg-no-repeat"></div>
+```
+
+To remove it, delete this div or set `display: none`.
+
+## Dependencies
+
+This component requires the `react-modal-video` package:
+
+```bash
+npm install react-modal-video
+```
+
+Don't forget to import its CSS in your layout or global styles:
+
+```tsx app/layout.tsx
+import "react-modal-video/css/modal-video.css";
+```
+
+## Example: Multiple Videos
+
+Create a reusable version that accepts props:
+
+```tsx components/VideoSection.tsx
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+import SectionTitle from "../Common/SectionTitle";
+import ModalVideo from "react-modal-video";
+
+interface VideoSectionProps {
+  title: string;
+  description: string;
+  videoId: string;
+  thumbnail: string;
+}
+
+export default function VideoSection({
+  title,
+  description,
+  videoId,
+  thumbnail,
+}: VideoSectionProps) {
+  const [isOpen, setOpen] = useState(false);
+
+  return (
+    <section className="relative z-10 py-16 md:py-20 lg:py-28">
+      <div className="container">
+        <SectionTitle
+          title={title}
+          paragraph={description}
+          center
+          mb="80px"
+        />
+
+        <div className="-mx-4 flex flex-wrap">
+          <div className="w-full px-4">
+            <div className="mx-auto max-w-[770px] overflow-hidden rounded-md">
+              <div className="relative aspect-[77/40] items-center justify-center">
+                <Image src={thumbnail} alt={title} fill />
+                <div className="absolute right-0 top-0 flex h-full w-full items-center justify-center">
+                  <button
+                    aria-label="video play button"
+                    onClick={() => setOpen(true)}
+                    className="flex h-[70px] w-[70px] items-center justify-center rounded-full bg-white bg-opacity-75 text-primary transition hover:bg-opacity-100"
+                  >
+                    <svg
+                      width="16"
+                      height="18"
+                      viewBox="0 0 16 18"
+                      className="fill-current"
+                    >
+                      <path d="M15.5 8.13397C16.1667 8.51888 16.1667 9.48112 15.5 9.86602L2 17.6603C1.33333 18.0452 0.499999 17.564 0.499999 16.7942L0.5 1.20577C0.5 0.43597 1.33333 -0.0451549 2 0.339745L15.5 8.13397Z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ModalVideo
+        channel="youtube"
+        autoplay={true}
+        start={true}
+        isOpen={isOpen}
+        videoId={videoId}
+        onClose={() => setOpen(false)}
+      />
+    </section>
+  );
+}
+```
+
+Usage:
+
+```tsx
+<VideoSection
+  title="Product Demo"
+  description="See our product in action"
+  videoId="ABC123XYZ"
+  thumbnail="/images/demo-thumbnail.webp"
+/>
+```
+
+## Accessibility
+
+- The play button includes `aria-label="video play button"` for screen readers
+- The modal can be closed with the Escape key
+- Keyboard navigation is fully supported
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Hero" icon="star" href="/components/hero">
+    Main landing section with call-to-action
+  </Card>
+  
+  <Card title="Features" icon="grid" href="/components/features">
+    Showcase your product features
+  </Card>
+</CardGroup>

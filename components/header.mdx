@@ -1,0 +1,405 @@
+---
+title: Header Component
+description: Responsive navigation header with sticky behavior, mobile menu, and dark mode toggle
+---
+
+The Header component provides a fully-featured navigation system with responsive mobile menu, sticky scrolling behavior, dropdown submenus, and integrated dark mode toggle. It's the primary navigation element used across all pages.
+
+## Features
+
+- Responsive mobile hamburger menu
+- Sticky header on scroll
+- Dropdown submenu support
+- Dark mode toggle integration
+- Next.js Link integration for client-side routing
+- Active route highlighting
+- Smooth transitions and animations
+- Logo switching between light/dark modes
+
+## Basic Usage
+
+```tsx
+import Header from "@/components/Header";
+
+export default function Layout({ children }) {
+  return (
+    <>
+      <Header />
+      <main>{children}</main>
+    </>
+  );
+}
+```
+
+<Note>
+  The Header component uses the `"use client"` directive because it manages state for the mobile menu, sticky behavior, and submenus.
+</Note>
+
+## Menu Configuration
+
+Menu items are defined in `src/components/Header/menuData.tsx`:
+
+```tsx
+import { Menu } from "@/types/menu";
+
+const menuData: Menu[] = [
+  {
+    id: 1,
+    title: "Home",
+    path: "/",
+    newTab: false,
+  },
+  {
+    id: 2,
+    title: "About",
+    path: "/about",
+    newTab: false,
+  },
+  {
+    id: 3,
+    title: "Pages",
+    newTab: false,
+    submenu: [
+      {
+        id: 31,
+        title: "Blog Page",
+        path: "/blog",
+        newTab: false,
+      },
+      {
+        id: 32,
+        title: "Sign In",
+        path: "/signin",
+        newTab: false,
+      },
+    ],
+  },
+];
+
+export default menuData;
+```
+
+### Menu Type Definition
+
+The `Menu` type is defined in `src/types/menu.ts`:
+
+```tsx
+export type Menu = {
+  id: number;
+  title: string;
+  path?: string;
+  newTab: boolean;
+  submenu?: Menu[];
+};
+```
+
+<ParamField path="id" type="number" required>
+  Unique identifier for the menu item
+</ParamField>
+
+<ParamField path="title" type="string" required>
+  Display text for the menu item
+</ParamField>
+
+<ParamField path="path" type="string">
+  Navigation path. Omit for parent items with submenus.
+</ParamField>
+
+<ParamField path="newTab" type="boolean" required>
+  Whether to open the link in a new tab (currently not implemented for internal links)
+</ParamField>
+
+<ParamField path="submenu" type="Menu[]">
+  Array of nested menu items for dropdown menus
+</ParamField>
+
+## Customization
+
+### Adding Menu Items
+
+Add new menu items to `menuData.tsx`:
+
+```tsx src/components/Header/menuData.tsx
+const menuData: Menu[] = [
+  {
+    id: 1,
+    title: "Home",
+    path: "/",
+    newTab: false,
+  },
+  {
+    id: 2,
+    title: "Services",
+    path: "/services",
+    newTab: false,
+  },
+  {
+    id: 3,
+    title: "Portfolio",
+    path: "/portfolio",
+    newTab: false,
+  },
+  {
+    id: 4,
+    title: "Contact",
+    path: "/contact",
+    newTab: false,
+  },
+];
+```
+
+### Creating Dropdown Menus
+
+Add submenu items by omitting `path` and adding a `submenu` array:
+
+```tsx
+{
+  id: 5,
+  title: "Resources",
+  newTab: false,
+  submenu: [
+    {
+      id: 51,
+      title: "Documentation",
+      path: "/docs",
+      newTab: false,
+    },
+    {
+      id: 52,
+      title: "Blog",
+      path: "/blog",
+      newTab: false,
+    },
+    {
+      id: 53,
+      title: "FAQ",
+      path: "/faq",
+      newTab: false,
+    },
+  ],
+}
+```
+
+### Changing Logos
+
+Update the logo images in the Header component:
+
+```tsx src/components/Header/index.tsx
+<Link href="/" className={`header-logo block w-full ${sticky ? "py-5 lg:py-2" : "py-8"}`}>
+  <Image
+    src="/images/logo/your-logo.svg"
+    alt="logo"
+    width={140}
+    height={30}
+    className="w-full dark:hidden"
+  />
+  <Image
+    src="/images/logo/your-logo-dark.svg"
+    alt="logo"
+    width={140}
+    height={30}
+    className="hidden w-full dark:block"
+  />
+</Link>
+```
+
+### Sticky Behavior
+
+The header becomes sticky when scrolling past 80px:
+
+```tsx
+const handleStickyNavbar = () => {
+  if (window.scrollY >= 80) {
+    setSticky(true);
+  } else {
+    setSticky(false);
+  }
+};
+```
+
+To change the threshold:
+
+```tsx
+if (window.scrollY >= 120) { // Trigger at 120px instead
+  setSticky(true);
+}
+```
+
+### Header Styling
+
+The header has different styles based on sticky state:
+
+```tsx
+<header
+  className={`header left-0 top-0 z-40 flex w-full items-center ${
+    sticky
+      ? "dark:bg-gray-dark dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition"
+      : "absolute bg-transparent"
+  }`}
+>
+```
+
+**Normal state**: Absolute positioning with transparent background  
+**Sticky state**: Fixed positioning with white background, shadow, and backdrop blur
+
+## Sign In/Sign Up Buttons
+
+The header includes Sign In and Sign Up buttons:
+
+```tsx
+<div className="flex items-center justify-end pr-16 lg:pr-0">
+  <Link
+    href="/signin"
+    className="hidden px-7 py-3 text-base font-medium text-dark hover:opacity-70 dark:text-white md:block"
+  >
+    Sign In
+  </Link>
+  <Link
+    href="/signup"
+    className="ease-in-up shadow-btn hover:shadow-btn-hover hidden rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-9 lg:px-6 xl:px-9"
+  >
+    Sign Up
+  </Link>
+  <div>
+    <ThemeToggler />
+  </div>
+</div>
+```
+
+To hide these buttons:
+
+```tsx
+{/* Remove or comment out Sign In/Sign Up links */}
+<div className="flex items-center justify-end pr-16 lg:pr-0">
+  <ThemeToggler />
+</div>
+```
+
+## Mobile Menu
+
+The mobile menu is controlled by state:
+
+```tsx
+const [navbarOpen, setNavbarOpen] = useState(false);
+
+const navbarToggleHandler = () => {
+  setNavbarOpen(!navbarOpen);
+};
+```
+
+The hamburger icon animates into an X when opened:
+
+```tsx
+<button
+  onClick={navbarToggleHandler}
+  id="navbarToggler"
+  aria-label="Mobile Menu"
+  className="absolute right-4 top-1/2 block translate-y-[-50%] rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden"
+>
+  <span className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${navbarOpen ? " top-[7px] rotate-45" : " "}`} />
+  <span className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${navbarOpen ? "opacity-0 " : " "}`} />
+  <span className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${navbarOpen ? " top-[-8px] -rotate-45" : " "}`} />
+</button>
+```
+
+## Active Route Highlighting
+
+Menu items are highlighted when on the current page:
+
+```tsx
+const usePathName = usePathname();
+
+<Link
+  href={menuItem.path}
+  className={`flex py-2 text-base lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 ${
+    usePathName === menuItem.path
+      ? "text-primary dark:text-white"
+      : "text-dark hover:text-primary dark:text-white/70 dark:hover:text-white"
+  }`}
+>
+  {menuItem.title}
+</Link>
+```
+
+## Dark Mode Toggle
+
+The header includes the `ThemeToggler` component. See the ThemeToggler documentation for customization options.
+
+## Advanced Example: Multi-level Menus
+
+Create deeply nested menu structures:
+
+```tsx
+const menuData: Menu[] = [
+  {
+    id: 1,
+    title: "Products",
+    newTab: false,
+    submenu: [
+      {
+        id: 11,
+        title: "Software",
+        newTab: false,
+        submenu: [
+          {
+            id: 111,
+            title: "Web Apps",
+            path: "/products/software/web",
+            newTab: false,
+          },
+          {
+            id: 112,
+            title: "Mobile Apps",
+            path: "/products/software/mobile",
+            newTab: false,
+          },
+        ],
+      },
+      {
+        id: 12,
+        title: "Hardware",
+        path: "/products/hardware",
+        newTab: false,
+      },
+    ],
+  },
+];
+```
+
+<Warning>
+  The current implementation only supports one level of submenus. For multi-level menus, you'll need to modify the Header component to recursively render nested submenus.
+</Warning>
+
+## Breakpoints
+
+The header is responsive across all screen sizes:
+
+- **Mobile** (`< 1024px`): Hamburger menu
+- **Desktop** (`>= 1024px`): Full horizontal navigation
+
+## Accessibility
+
+- The mobile menu toggle has `aria-label="Mobile Menu"`
+- Keyboard navigation is fully supported
+- Focus states are visible with `focus:ring-2`
+- Semantic HTML with `<header>`, `<nav>`, and `<ul>` elements
+
+## Z-Index Layers
+
+- Normal header: `z-40`
+- Sticky header: `z-[9999]`
+- Mobile menu dropdown: `z-30`
+
+Ensure other components don't interfere with these layers.
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Footer" icon="bars" href="/components/footer">
+    Bottom navigation and site information
+  </Card>
+  
+  <Card title="ScrollUp" icon="arrow-up" href="/components/scroll-up">
+    Scroll to top button for better navigation
+  </Card>
+</CardGroup>
