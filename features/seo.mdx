@@ -1,0 +1,606 @@
+---
+title: SEO Optimization
+description: Learn how to optimize your Pengrafic Next.js template for search engines with metadata, Open Graph, and more
+---
+
+## Overview
+
+The Pengrafic template includes built-in SEO optimization features using Next.js 14's Metadata API. This includes support for Open Graph tags, Twitter Cards, sitemaps, and robots.txt configuration.
+
+## Metadata Configuration
+
+### Global Metadata
+
+Global metadata is configured in `src/app/layout.tsx`:
+
+```tsx src/app/layout.tsx
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Pengrafic: Agencia de Marketing Digital y Desarrollo Web',
+  description: 'Tu descripción del sitio web de Pengrafic...',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/pen2025.png',
+  },
+  verification: {
+    google: 'xIiLIUqqWxzZ6XSXF7YQ-GKiOKmlUnUdIrTsd3fnceg',
+  },
+};
+```
+
+**Configuration options:**
+- `title` - Default page title for the entire site
+- `description` - Default meta description
+- `icons` - Favicon and shortcut icon paths
+- `verification` - Google Search Console verification code
+
+### Page-Specific Metadata
+
+Each page can override the global metadata. Example from `src/app/page.tsx`:
+
+```tsx src/app/page.tsx
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Agencia de Marketing - Pengrafic",
+  description: "Estas en Internet luego existes, somos una agencia integral creativa. Realizamos proyectos de imagen, diseño, desarrollo web, aplicaciones móviles.",
+  
+  // Open Graph / Facebook
+  openGraph: {
+    title: "Agencia de Marketing - Pengrafic",
+    description: "Estas en Internet luego existes, somos una agencia integral creativa.",
+    url: "https://pengrafic.com",
+    siteName: "Pengrafic",
+    images: [
+      {
+        url: "https://pengrafic.com/images/pengrafic_flyer_face_2025.webp",
+        width: 1200,
+        height: 630,
+        alt: "Pengrafic - Agencia de Marketing Digital",
+      },
+    ],
+    locale: 'es_ES',
+    type: 'website',
+  },
+  
+  // Twitter
+  twitter: {
+    card: 'summary_large_image',
+    title: "Agencia de Marketing - Pengrafic",
+    description: "Estas en Internet luego existes, somos una agencia integral creativa.",
+    images: ['https://pengrafic.com/images/pengrafic_flyer_face_2025.jpg'],
+  },
+  
+  keywords: "marketing digital, diseño gráfico, audiovisuales, web, ecommerce, publicidad, redes sociales, SEO, contenido digital",
+};
+```
+
+## Open Graph Tags
+
+### Basic Open Graph Setup
+
+Open Graph tags make your site shareable on Facebook, LinkedIn, and other social platforms:
+
+```tsx
+export const metadata: Metadata = {
+  openGraph: {
+    title: "Your Page Title",
+    description: "Your page description",
+    url: "https://yourdomain.com/page",
+    siteName: "Your Site Name",
+    images: [
+      {
+        url: "https://yourdomain.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Image description",
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+};
+```
+
+### Open Graph Image Requirements
+
+- **Recommended size:** 1200 x 630 pixels
+- **Aspect ratio:** 1.91:1
+- **Format:** JPG, PNG, or WebP
+- **Max file size:** 8 MB
+- **Minimum size:** 200 x 200 pixels
+
+### Open Graph Types
+
+```tsx
+// Website (default)
+openGraph: {
+  type: 'website',
+}
+
+// Article/Blog post
+openGraph: {
+  type: 'article',
+  publishedTime: '2025-03-12T00:00:00.000Z',
+  modifiedTime: '2025-03-13T00:00:00.000Z',
+  authors: ['Author Name'],
+  section: 'Technology',
+  tags: ['Next.js', 'SEO', 'Web Development'],
+}
+
+// Profile
+openGraph: {
+  type: 'profile',
+  firstName: 'John',
+  lastName: 'Doe',
+  username: 'johndoe',
+  gender: 'male',
+}
+```
+
+## Twitter Card Tags
+
+### Summary Card
+
+```tsx
+export const metadata: Metadata = {
+  twitter: {
+    card: 'summary',
+    title: "Your Title",
+    description: "Your description",
+    creator: '@yourusername',
+    images: ['https://yourdomain.com/twitter-image.jpg'],
+  },
+};
+```
+
+### Summary Large Image Card
+
+```tsx
+export const metadata: Metadata = {
+  twitter: {
+    card: 'summary_large_image',
+    title: "Your Title",
+    description: "Your description",
+    creator: '@yourusername',
+    images: ['https://yourdomain.com/twitter-large-image.jpg'],
+  },
+};
+```
+
+**Large image requirements:**
+- **Recommended size:** 1200 x 628 pixels
+- **Aspect ratio:** 2:1
+- **Format:** JPG, PNG, WebP, or GIF
+- **Max file size:** 5 MB
+
+## Sitemap Configuration
+
+The template includes a static sitemap at `public/sitemap.xml`:
+
+```xml public/sitemap.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>https://www.pengrafic.com/</loc>
+  <lastmod>2025-04-18T23:58:47+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.pengrafic.com/about</loc>
+  <lastmod>2025-04-18T23:58:47+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.pengrafic.com/blog</loc>
+  <lastmod>2025-04-18T23:58:47+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.pengrafic.com/contact</loc>
+  <lastmod>2025-04-18T23:58:47+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+</urlset>
+```
+
+### Dynamic Sitemap (Advanced)
+
+For dynamic content, create `app/sitemap.ts`:
+
+```ts app/sitemap.ts
+import { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    {
+      url: 'https://yourdomain.com',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 1,
+    },
+    {
+      url: 'https://yourdomain.com/about',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://yourdomain.com/blog',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
+  ];
+}
+```
+
+### Fetching Dynamic Routes
+
+```ts app/sitemap.ts
+import { MetadataRoute } from 'next';
+
+export default async function sitemap(): MetadataRoute.Sitemap {
+  // Fetch blog posts
+  const posts = await fetch('https://api.yourdomain.com/posts').then(res => res.json());
+  
+  const postUrls = posts.map((post) => ({
+    url: `https://yourdomain.com/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  return [
+    {
+      url: 'https://yourdomain.com',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 1,
+    },
+    ...postUrls,
+  ];
+}
+```
+
+## Robots.txt Configuration
+
+The robots.txt file is located at `public/robots.txt`:
+
+```txt public/robots.txt
+User-agent: *
+Allow: /
+Sitemap: https://pengrafic.com/sitemap.xml
+```
+
+### Dynamic Robots.txt (Advanced)
+
+Create `app/robots.ts` for dynamic configuration:
+
+```ts app/robots.ts
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/private/', '/admin/'],
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        crawlDelay: 2,
+      },
+    ],
+    sitemap: 'https://yourdomain.com/sitemap.xml',
+  };
+}
+```
+
+### Common Robots.txt Patterns
+
+**Block specific paths:**
+```txt
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Allow: /
+```
+
+**Block specific bots:**
+```txt
+User-agent: BadBot
+Disallow: /
+
+User-agent: *
+Allow: /
+```
+
+**Set crawl delay:**
+```txt
+User-agent: *
+Crawl-delay: 10
+Allow: /
+```
+
+## SEO Best Practices
+
+<Steps>
+
+### Optimize Page Titles
+
+- Keep titles under 60 characters
+- Include primary keyword near the beginning
+- Make each page title unique
+- Use pipes (|) or dashes (-) to separate segments
+
+```tsx
+export const metadata: Metadata = {
+  title: "Primary Keyword - Secondary Keyword | Brand Name",
+};
+```
+
+### Write Compelling Meta Descriptions
+
+- Keep descriptions between 150-160 characters
+- Include a call-to-action
+- Make them unique for each page
+- Include target keywords naturally
+
+```tsx
+export const metadata: Metadata = {
+  description: "Discover how to optimize your Next.js site for SEO. Learn about metadata, Open Graph, and more. Get started today!",
+};
+```
+
+### Use Semantic HTML
+
+Use proper heading hierarchy:
+
+```tsx
+<h1>Main Page Title</h1>
+  <h2>Section Title</h2>
+    <h3>Subsection Title</h3>
+```
+
+### Optimize Images
+
+- Use descriptive alt text
+- Compress images before uploading
+- Use Next.js Image component for optimization
+- Use WebP format when possible
+
+```tsx
+import Image from "next/image";
+
+<Image
+  src="/images/hero.jpg"
+  alt="Professional web development services for businesses"
+  width={1200}
+  height={600}
+  priority
+/>
+```
+
+### Add Structured Data
+
+Add JSON-LD structured data for rich snippets:
+
+```tsx
+export default function Page() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Pengrafic',
+    url: 'https://pengrafic.com',
+    logo: 'https://pengrafic.com/logo.png',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+51-992-870-423',
+      contactType: 'customer service',
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+### Implement Canonical URLs
+
+Prevent duplicate content issues:
+
+```tsx
+export const metadata: Metadata = {
+  alternates: {
+    canonical: 'https://yourdomain.com/page',
+  },
+};
+```
+
+### Add Language and Region Tags
+
+```tsx
+export const metadata: Metadata = {
+  alternates: {
+    languages: {
+      'en-US': 'https://yourdomain.com/en',
+      'es-ES': 'https://yourdomain.com/es',
+    },
+  },
+};
+```
+
+</Steps>
+
+## Testing SEO
+
+### Tools to Test Your SEO
+
+1. **Google Search Console**
+   - Monitor search performance
+   - Submit sitemaps
+   - Check for crawl errors
+
+2. **PageSpeed Insights**
+   - Test page speed
+   - Get optimization recommendations
+   - Check Core Web Vitals
+
+3. **Rich Results Test**
+   - Validate structured data
+   - Preview rich snippets
+   - Check for errors
+
+4. **Facebook Sharing Debugger**
+   - Test Open Graph tags
+   - Preview social shares
+   - Clear cache
+
+5. **Twitter Card Validator**
+   - Test Twitter Cards
+   - Preview card appearance
+   - Validate metadata
+
+### Manual Testing
+
+**View page source:**
+```bash
+curl -s https://yourdomain.com | grep -i '<meta'
+```
+
+**Test robots.txt:**
+```bash
+curl https://yourdomain.com/robots.txt
+```
+
+**Test sitemap:**
+```bash
+curl https://yourdomain.com/sitemap.xml
+```
+
+## Common SEO Issues
+
+<Warning>
+  **Avoid these common mistakes:**
+  
+  - Duplicate meta descriptions across pages
+  - Missing alt text on images
+  - Broken internal links
+  - Slow page load times
+  - Missing mobile optimization
+  - Blocking important content in robots.txt
+  - Not using HTTPS
+  - Missing structured data
+</Warning>
+
+## Monitoring SEO Performance
+
+### Set Up Google Search Console
+
+<Steps>
+
+1. Go to [Google Search Console](https://search.google.com/search-console)
+2. Add your property (domain or URL prefix)
+3. Verify ownership using the verification code in your metadata
+4. Submit your sitemap URL
+5. Monitor performance in the dashboard
+
+</Steps>
+
+### Key Metrics to Track
+
+- **Organic traffic** - Visitors from search engines
+- **Click-through rate (CTR)** - Percentage of impressions that result in clicks
+- **Average position** - Where your pages rank in search results
+- **Core Web Vitals** - Page experience metrics (LCP, FID, CLS)
+- **Indexed pages** - Number of pages in Google's index
+- **Crawl errors** - Issues preventing proper indexing
+
+## Advanced SEO Features
+
+### Multi-language Support
+
+```tsx
+export const metadata: Metadata = {
+  alternates: {
+    canonical: 'https://yourdomain.com',
+    languages: {
+      'en-US': 'https://yourdomain.com/en',
+      'es-ES': 'https://yourdomain.com/es',
+      'fr-FR': 'https://yourdomain.com/fr',
+    },
+  },
+};
+```
+
+### App Links (Deep Linking)
+
+```tsx
+export const metadata: Metadata = {
+  appLinks: {
+    ios: {
+      url: 'https://yourdomain.com/ios',
+      app_store_id: 'app_store_id',
+    },
+    android: {
+      package: 'com.example.android',
+      app_name: 'Your App',
+    },
+  },
+};
+```
+
+### RSS Feed
+
+Create `app/feed.xml/route.ts`:
+
+```ts
+import { Feed } from 'feed';
+
+export async function GET() {
+  const feed = new Feed({
+    title: "Your Blog",
+    description: "Latest posts from your blog",
+    id: "https://yourdomain.com/",
+    link: "https://yourdomain.com/",
+    language: "en",
+    copyright: "All rights reserved 2025",
+  });
+
+  // Add posts to feed
+  const posts = await getPosts();
+  posts.forEach(post => {
+    feed.addItem({
+      title: post.title,
+      id: post.id,
+      link: `https://yourdomain.com/blog/${post.slug}`,
+      description: post.description,
+      date: new Date(post.publishedAt),
+    });
+  });
+
+  return new Response(feed.rss2(), {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  });
+}
+```

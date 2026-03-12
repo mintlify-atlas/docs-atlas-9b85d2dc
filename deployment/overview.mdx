@@ -1,0 +1,209 @@
+---
+title: 'Deployment Overview'
+description: 'Learn how to deploy your Pengrafic Next.js application to production'
+---
+
+## Build Process
+
+The Pengrafic template uses Next.js 14 with the App Router. The build process compiles your application into an optimized production bundle.
+
+### Build Command
+
+```bash
+npm run build
+```
+
+This runs `next build` which:
+- Compiles TypeScript to JavaScript
+- Optimizes and minifies code
+- Generates static pages where possible
+- Creates server-side rendered pages
+- Optimizes images and assets
+
+### Production Server
+
+After building, start the production server:
+
+```bash
+npm run start
+```
+
+This runs `next start` on port 3000 by default.
+
+## Environment Variables
+
+Before deploying, ensure you have the following environment variables configured:
+
+<Note>
+  Always use environment variables for sensitive data. Never commit `.env.local` files to version control.
+</Note>
+
+### Required Variables
+
+```bash
+# Supabase Configuration (if using authentication)
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Optional: Analytics, API keys, etc.
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+```
+
+### Environment Variable Naming
+
+- `NEXT_PUBLIC_*` variables are exposed to the browser
+- Variables without `NEXT_PUBLIC_` prefix are server-side only
+- Use different values for development and production environments
+
+## Pre-Deployment Checklist
+
+<Steps>
+  <Step title="Test Build Locally">
+    Run `npm run build` locally to ensure there are no build errors:
+    
+    ```bash
+    npm run build
+    npm run start
+    ```
+    
+    Visit `http://localhost:3000` to verify the production build works correctly.
+  </Step>
+
+  <Step title="Configure Environment Variables">
+    Prepare all required environment variables for your production environment. Update any URLs, API keys, or configuration values that differ from development.
+  </Step>
+
+  <Step title="Update Image Domains">
+    If using external images, configure allowed domains in `next.config.js`:
+    
+    ```javascript
+    images: {
+      domains: ['localhost'],
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'cdn.sanity.io',
+        },
+      ],
+    }
+    ```
+  </Step>
+
+  <Step title="Review Security Settings">
+    - Enable `reactStrictMode` (already enabled)
+    - Consider setting `poweredByHeader: false` to hide Next.js version
+    - Review CORS and CSP policies if needed
+  </Step>
+
+  <Step title="Test Performance">
+    Run Lighthouse or similar tools to check:
+    - Performance scores
+    - Accessibility
+    - SEO optimization
+    - Best practices
+  </Step>
+</Steps>
+
+## Deployment Options
+
+Pengrafic can be deployed to various platforms. Choose the option that best fits your needs:
+
+### Vercel (Recommended)
+
+Vercel is the creator of Next.js and offers seamless deployment with zero configuration.
+
+- Automatic builds on git push
+- Edge network with global CDN
+- Preview deployments for pull requests
+- Built-in analytics and monitoring
+
+[View Vercel deployment guide →](/deployment/vercel)
+
+### Netlify
+
+Netlify provides excellent Next.js support with serverless functions and edge capabilities.
+
+- Git-based deployment workflow
+- Built-in CI/CD pipeline
+- Form handling and serverless functions
+- Split testing and branch deploys
+
+[View Netlify deployment guide →](/deployment/netlify)
+
+### Self-Hosted
+
+Deploy to your own infrastructure using:
+
+- Docker containers
+- VPS (DigitalOcean, Linode, etc.)
+- AWS, Google Cloud, or Azure
+- Kubernetes clusters
+
+<Note>
+  Self-hosting requires managing your own infrastructure, SSL certificates, and scaling. Use a platform like Vercel or Netlify for easier deployment.
+</Note>
+
+## Build Output
+
+The `next build` command generates:
+
+- `.next/` directory with compiled application
+- Static assets in `.next/static/`
+- Server-side code for dynamic pages
+- Optimized images and fonts
+
+### Output Structure
+
+```
+.next/
+├── static/          # Static assets with cache hashes
+├── server/          # Server-side code
+├── cache/           # Build cache for faster rebuilds
+└── standalone/      # Optional standalone output
+```
+
+## Performance Optimization
+
+The template includes several optimizations:
+
+- **SWC Minification**: Faster minification with `swcMinify: true`
+- **Image Optimization**: Modern formats (AVIF, WebP) with `next/image`
+- **Code Splitting**: Automatic code splitting per route
+- **Font Optimization**: Automatic font optimization
+- **Caching**: Minimum cache TTL of 60 seconds for images
+
+## Monitoring and Analytics
+
+After deployment, consider adding:
+
+- **Vercel Analytics**: Built-in performance monitoring
+- **Google Analytics**: User behavior tracking
+- **Sentry**: Error tracking and reporting
+- **Uptime Monitoring**: Service availability checks
+
+## Troubleshooting
+
+### Build Fails
+
+- Check TypeScript errors: `npm run lint`
+- Clear cache: `rm -rf .next` and rebuild
+- Verify all dependencies are installed: `npm install`
+
+### Runtime Errors
+
+- Check environment variables are set correctly
+- Review server logs in your deployment platform
+- Ensure API endpoints are accessible from production
+
+### Image Loading Issues
+
+- Verify image domains in `next.config.js`
+- Check image paths are correct
+- Ensure external image sources allow CORS
+
+## Next Steps
+
+Choose your deployment platform and follow the detailed guide:
+
+- [Deploy to Vercel →](/deployment/vercel)
+- [Deploy to Netlify →](/deployment/netlify)

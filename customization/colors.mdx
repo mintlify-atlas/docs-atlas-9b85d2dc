@@ -1,0 +1,256 @@
+---
+title: 'Colors'
+description: 'Customize the color palette and theme colors'
+---
+
+## Overview
+
+Pengrafic includes a carefully crafted color system built on Tailwind CSS. The color palette supports both light and dark modes with semantic color tokens.
+
+## Color Palette
+
+The complete color palette is defined in `tailwind.config.js`:
+
+### Primary Colors
+
+| Color | Value | Usage |
+|-------|-------|-------|
+| **Primary** | `#4A6CF7` | Main brand color, buttons, links |
+| **Yellow** | `#FBB040` | Accents, highlights, call-to-actions |
+| **Black** | `#111b33` | Dark backgrounds, text |
+| **White** | `#FFFFFF` | Light backgrounds, text |
+
+```tsx
+// Usage examples
+<button className="bg-primary text-white">Primary Button</button>
+<div className="bg-yellow text-black">Highlight Banner</div>
+```
+
+### Semantic Colors
+
+Colors that adapt to light/dark modes:
+
+#### Body Text Color
+
+```js tailwind.config.js
+"body-color": {
+  DEFAULT: "#788293",  // Light mode
+  dark: "#959CB1",     // Dark mode
+}
+```
+
+```tsx
+<p className="text-body-color dark:text-body-color-dark">
+  This text adapts to the theme
+</p>
+```
+
+#### Stroke Colors
+
+```js tailwind.config.js
+stroke: {
+  stroke: "#E3E8EF",   // Light mode borders
+  dark: "#353943",     // Dark mode borders
+}
+```
+
+```tsx
+<div className="border border-stroke-stroke dark:border-stroke-dark">
+  Themed border
+</div>
+```
+
+### Gray Scale
+
+```js tailwind.config.js
+gray: {
+  ...colors.gray,      // Tailwind's default gray scale
+  dark: "#111b33",     // Custom dark gray
+  light: "#F0F2F9",    // Custom light gray
+}
+```
+
+<CodeGroup>
+
+```tsx Light Gray
+<div className="bg-gray-light">
+  Light gray background
+</div>
+```
+
+```tsx Dark Gray
+<div className="bg-gray-dark">
+  Dark gray background
+</div>
+```
+
+</CodeGroup>
+
+### Background Colors
+
+```js tailwind.config.js
+"bg-color-dark": "#111b33"
+```
+
+Used for dark mode backgrounds:
+
+```tsx src/app/RootClientLayout.tsx
+<body className="bg-[#FCFCFC] dark:bg-black">
+```
+
+## Customizing Colors
+
+### Adding New Colors
+
+Add custom colors to the `extend.colors` section in `tailwind.config.js`:
+
+```js tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Add your custom colors
+        brand: {
+          DEFAULT: "#4A6CF7",
+          light: "#6B8EFF",
+          dark: "#3A5CD7",
+        },
+        success: "#10B981",
+        error: "#EF4444",
+        warning: "#F59E0B",
+      },
+    },
+  },
+};
+```
+
+### Changing the Primary Color
+
+<CodeGroup>
+
+```js Blue (Default)
+colors: {
+  primary: "#4A6CF7",
+}
+```
+
+```js Purple
+colors: {
+  primary: "#8B5CF6",
+}
+```
+
+```js Green
+colors: {
+  primary: "#10B981",
+}
+```
+
+</CodeGroup>
+
+<Tip>
+After changing colors in `tailwind.config.js`, restart your development server to see the changes.
+</Tip>
+
+### Theme-Aware Colors
+
+Create colors that change based on the theme:
+
+```js tailwind.config.js
+colors: {
+  card: {
+    DEFAULT: "#FFFFFF",    // Light mode
+    dark: "#1F2937",       // Dark mode
+  },
+}
+```
+
+Usage:
+
+```tsx
+<div className="bg-card dark:bg-card-dark">
+  Theme-aware card background
+</div>
+```
+
+## Shadow System
+
+Pengrafic includes custom shadow utilities for depth and elevation:
+
+```js tailwind.config.js
+boxShadow: {
+  signUp: "0px 5px 10px rgba(4, 10, 34, 0.2)",
+  one: "0px 2px 3px rgba(7, 7, 77, 0.05)",
+  two: "0px 5px 10px rgba(6, 8, 15, 0.1)",
+  three: "0px 5px 15px rgba(6, 8, 15, 0.05)",
+  sticky: "inset 0 -1px 0 0 rgba(0, 0, 0, 0.1)",
+  "sticky-dark": "inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)",
+  "feature-2": "0px 10px 40px rgba(48, 86, 211, 0.12)",
+  submit: "0px 5px 20px rgba(4, 10, 34, 0.1)",
+  btn: "0px 1px 2px rgba(4, 10, 34, 0.15)",
+  "btn-hover": "0px 1px 2px rgba(0, 0, 0, 0.15)",
+}
+```
+
+### Using Shadows
+
+```tsx
+<button className="shadow-btn hover:shadow-btn-hover">
+  Button with shadow
+</button>
+
+<div className="shadow-two rounded-lg">
+  Card with elevation
+</div>
+```
+
+## Special Color Utilities
+
+### Current Color
+
+```tsx
+<svg className="text-primary">
+  <path fill="currentColor" />
+</svg>
+```
+
+### Transparent
+
+```tsx
+<div className="bg-transparent border-2 border-primary">
+  Transparent background with border
+</div>
+```
+
+## Best Practices
+
+<Note>
+1. **Use semantic tokens**: Prefer `text-body-color` over hardcoded hex values
+2. **Always provide dark variants**: Ensure every color has a dark mode equivalent
+3. **Test contrast**: Verify text is readable in both themes
+4. **Consistent palette**: Stick to the defined color system for brand consistency
+</Note>
+
+## Color Reference
+
+Here's a quick reference for all custom colors:
+
+```js
+current: "currentColor"
+transparent: "transparent"
+white: "#FFFFFF"
+black: "#111b33"
+dark: "#111b33"
+primary: "#4A6CF7"
+yellow: "#FBB040"
+bg-color-dark: "#111b33"
+body-color: "#788293" (light) / "#959CB1" (dark)
+stroke: "#E3E8EF" (light) / "#353943" (dark)
+gray-light: "#F0F2F9"
+gray-dark: "#111b33"
+```
+
+## Related
+
+- [Theming](/customization/theming) - Learn about the theme system
+- [Typography](/customization/typography) - Configure fonts and text styles

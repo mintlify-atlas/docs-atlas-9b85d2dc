@@ -1,0 +1,199 @@
+---
+title: Hero Component
+description: Eye-catching hero section with call-to-action buttons and animated SVG backgrounds
+---
+
+The Hero component is the first section visitors see on your landing page. It features a centered headline, description text, call-to-action buttons, and decorative SVG backgrounds.
+
+## Import
+
+```tsx
+import Hero from "@/components/Hero/index1";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import Hero from "@/components/Hero/index1";
+
+    export default function Home() {
+      return (
+        <>
+          <Hero />
+          {/* Other components */}
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Full Example">
+    ```tsx src/app/page.tsx
+    import Hero from "@/components/Hero/index1";
+    import Features from "@/components/Features";
+    import Contact from "@/components/Contact";
+
+    export default function Home() {
+      return (
+        <>
+          <Hero />
+          <Features />
+          <Contact />
+        </>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Component Structure
+
+The Hero component from `src/components/Hero/index1.tsx` is a standalone component with no props. Content is hardcoded in the component file.
+
+### Anatomy
+
+```tsx
+const Hero = () => {
+  return (
+    <section id="home" className="...">
+      <div className="container">
+        <div className="mx-auto max-w-[800px] text-center">
+          <h1>{/* Headline */}</h1>
+          <p>{/* Description */}</p>
+          <div>{/* CTA Buttons */}</div>
+        </div>
+      </div>
+      {/* SVG Backgrounds */}
+    </section>
+  );
+};
+```
+
+## Customization
+
+### Changing Text Content
+
+Edit the component file directly at `src/components/Hero/index1.tsx`:
+
+```tsx src/components/Hero/index1.tsx
+<h1 className="mb-5 text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-5xl leading-tight">
+  Potencia tu negocio con un eCommerce o Landing Page diseñados para vender
+</h1>
+
+<p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
+  Atrae más clientes, aumenta tus ventas y optimiza cada clic con una plataforma hecha a tu medida. ¡Convierte visitantes en ventas hoy mismo!
+</p>
+```
+
+### Modifying CTA Buttons
+
+The component includes two call-to-action buttons:
+
+```tsx src/components/Hero/index1.tsx
+<div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:flex-row sm:space-x-4 sm:space-y-0">
+  <Link
+    href="tel:51992870423"
+    className="rounded-sm bg-primary px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
+  >
+    🔥 Llamanos
+  </Link>
+  <Link
+    href="https://github.com/djvamps"
+    className="inline-block rounded-sm bg-black px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
+  >
+    Escribenos
+  </Link>
+</div>
+```
+
+<ParamField path="href" type="string">
+  Update the link destination (phone number, URL, or internal route)
+</ParamField>
+
+<ParamField path="className" type="string">
+  Tailwind classes for styling - use `bg-primary` for primary button or custom colors
+</ParamField>
+
+### Adjusting Spacing
+
+The hero section uses responsive padding:
+
+```tsx
+className="pb-16 pt-[120px] md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
+```
+
+- `pt-[120px]`: Top padding on mobile
+- `md:pt-[150px]`: Top padding on tablet
+- `xl:pt-[180px]`: Top padding on desktop
+- `2xl:pt-[210px]`: Top padding on large screens
+
+### Background Decorations
+
+The component includes two SVG decorations:
+
+1. **Top Right**: Gradient circles and rings
+2. **Bottom Left**: Wavy lines and geometric shapes
+
+To remove backgrounds:
+
+```tsx
+// Remove the SVG divs at the bottom of the component
+<div className="absolute right-0 top-0 z-[-1] opacity-30 lg:opacity-100">
+  {/* Remove this entire div */}
+</div>
+```
+
+## Styling Options
+
+### Dark Mode
+
+The component automatically adapts to dark mode:
+
+```tsx
+className="bg-white dark:bg-gray-dark"
+className="text-black dark:text-white"
+className="text-body-color dark:text-body-color-dark"
+```
+
+### Responsive Typography
+
+Headline sizes scale across breakpoints:
+
+- Mobile: `text-3xl`
+- Small: `sm:text-4xl`
+- Medium: `md:text-5xl`
+
+## Accessibility
+
+- Section has `id="home"` for anchor navigation
+- Proper heading hierarchy (`<h1>` for main title)
+- Semantic HTML with `<section>` wrapper
+- Link text clearly describes action
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep headlines concise">
+    Aim for 10-15 words maximum. The current headline is effective at 13 words.
+  </Accordion>
+  
+  <Accordion title="Clear call-to-action">
+    Use action-oriented button text like "Get Started", "Learn More", or "Contact Us".
+  </Accordion>
+  
+  <Accordion title="Contrast for readability">
+    Ensure text has sufficient contrast against backgrounds (WCAG AA standard).
+  </Accordion>
+  
+  <Accordion title="Mobile-first testing">
+    Always test the hero on mobile devices as it's often the first impression.
+  </Accordion>
+</AccordionGroup>
+
+## Related Components
+
+- [Features](/components/features) - Often placed immediately after Hero
+- [Contact](/components/contact) - Common destination for CTA buttons
+- [About](/components/about) - Provides context after the hero section

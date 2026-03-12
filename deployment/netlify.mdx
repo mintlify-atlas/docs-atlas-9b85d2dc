@@ -1,0 +1,480 @@
+---
+title: 'Deploy to Netlify'
+description: 'Step-by-step guide to deploy your Pengrafic Next.js application to Netlify'
+---
+
+## Why Netlify?
+
+Netlify offers excellent Next.js support with powerful features:
+
+- **Essential Next.js Support**: Full support for Next.js 14 with App Router
+- **Git-Based Workflow**: Automatic deployments on git push
+- **Edge Functions**: Deploy serverless functions globally
+- **Deploy Previews**: Automatic preview URLs for pull requests
+- **Built-in CI/CD**: Continuous deployment pipeline
+- **Split Testing**: A/B testing and branch-based deploys
+
+## Prerequisites
+
+- GitHub, GitLab, or Bitbucket account
+- Your Pengrafic project pushed to a git repository
+- Netlify account (free tier available)
+
+## Deployment Steps
+
+<Steps>
+  <Step title="Create Netlify Account">
+    Visit [netlify.com](https://www.netlify.com) and sign up:
+    
+    1. Click "Sign Up"
+    2. Choose your git provider (GitHub, GitLab, or Bitbucket)
+    3. Authorize Netlify to access your repositories
+  </Step>
+
+  <Step title="Import Your Project">
+    From your Netlify dashboard:
+    
+    1. Click "Add new site" → "Import an existing project"
+    2. Choose your git provider
+    3. Select your Pengrafic repository
+    4. Authorize repository access if prompted
+  </Step>
+
+  <Step title="Configure Build Settings">
+    Netlify may auto-detect Next.js. Verify these settings:
+    
+    **Build Settings**:
+    ```bash
+    Base directory: (leave empty)
+    Build command: npm run build
+    Publish directory: .next
+    ```
+    
+    **Advanced Settings**:
+    - Enable "Next.js Runtime" (recommended for best performance)
+    - Node version: 18.x or higher (auto-detected from `.nvmrc` or `.node-version`)
+    
+    <Note>
+      The build command `npm run build` is from your `package.json` and runs `next build`.
+    </Note>
+  </Step>
+
+  <Step title="Configure Environment Variables">
+    Add your environment variables:
+    
+    1. Scroll to "Advanced build settings"
+    2. Click "New variable" for each environment variable
+    3. Add key-value pairs
+    
+    Example variables:
+    ```bash
+    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+    NEXT_PUBLIC_SITE_URL=https://yourdomain.netlify.app
+    ```
+    
+    <Note>
+      You can also add environment variables later in Site Settings → Environment Variables.
+    </Note>
+  </Step>
+
+  <Step title="Deploy Site">
+    Click "Deploy site" to start the build:
+    
+    - Netlify clones your repository
+    - Runs `npm install` to install dependencies
+    - Executes `npm run build` to build your app
+    - Deploys to Netlify's global CDN
+    
+    Your site will be live in 2-3 minutes with a generated URL like `random-name-123.netlify.app`.
+  </Step>
+</Steps>
+
+## Post-Deployment Configuration
+
+### Custom Domain
+
+<Steps>
+  <Step title="Add Custom Domain">
+    In your site settings:
+    
+    1. Go to "Domain management" → "Add custom domain"
+    2. Enter your domain name (e.g., `yourdomain.com`)
+    3. Click "Verify" then "Add domain"
+  </Step>
+
+  <Step title="Configure DNS">
+    Choose your DNS configuration method:
+    
+    **Option 1: Netlify DNS (Recommended)**
+    
+    1. Click "Use Netlify DNS"
+    2. Update nameservers at your domain registrar:
+    ```
+    dns1.p01.nsone.net
+    dns2.p01.nsone.net
+    dns3.p01.nsone.net
+    dns4.p01.nsone.net
+    ```
+    
+    **Option 2: External DNS**
+    
+    Add these records to your DNS provider:
+    ```
+    Type: A
+    Name: @
+    Value: 75.2.60.5
+    
+    Type: CNAME
+    Name: www
+    Value: your-site.netlify.app
+    ```
+  </Step>
+
+  <Step title="Enable HTTPS">
+    Netlify automatically provisions SSL certificates:
+    
+    1. Wait for DNS propagation (up to 24 hours, usually minutes)
+    2. Certificate is auto-provisioned via Let's Encrypt
+    3. HTTPS is enabled automatically
+    4. HTTP to HTTPS redirect is enabled by default
+  </Step>
+</Steps>
+
+### Environment Variables Management
+
+Manage environment variables after deployment:
+
+1. Go to "Site settings" → "Environment variables"
+2. Click "Add a variable" to create new ones
+3. Edit or delete existing variables
+4. Choose scopes: Production, Deploy Previews, Branch deploys
+
+<Note>
+  Changes to environment variables require a new deployment. Trigger one by clicking "Trigger deploy" → "Deploy site".
+</Note>
+
+## Netlify Configuration File
+
+For advanced configuration, create `netlify.toml` in your project root:
+
+```toml
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Redirect rules
+[[redirects]]
+  from = "/old-path"
+  to = "/new-path"
+  status = 301
+
+# Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+```
+
+Commit this file to enable advanced features:
+
+```bash
+git add netlify.toml
+git commit -m "Add Netlify configuration"
+git push
+```
+
+## Automatic Deployments
+
+Netlify automatically deploys your project:
+
+### Production Deployments
+
+- Triggered by pushes to your production branch (usually `main` or `master`)
+- Published to your primary domain
+- Full build and optimization
+
+```bash
+git add .
+git commit -m "Update feature"
+git push origin main
+```
+
+### Deploy Previews
+
+- Created automatically for every pull request
+- Unique preview URL for each PR
+- Comment posted on GitHub/GitLab with preview link
+
+```bash
+git checkout -b feature-branch
+git add .
+git commit -m "Add new feature"
+git push origin feature-branch
+# Open pull request on GitHub
+```
+
+### Branch Deploys
+
+Deploy specific branches:
+
+1. Go to "Site settings" → "Build & deploy" → "Continuous deployment"
+2. Under "Branch deploys", select branches to deploy
+3. Each branch gets its own URL: `branch-name--your-site.netlify.app`
+
+## Netlify CLI (Optional)
+
+Deploy and manage your site from the terminal:
+
+### Installation
+
+```bash
+npm install -g netlify-cli
+```
+
+### Login
+
+```bash
+netlify login
+```
+
+### Link Project
+
+Connect your local project to Netlify:
+
+```bash
+netlify link
+```
+
+### Local Development
+
+Run your site with Netlify's local environment:
+
+```bash
+netlify dev
+```
+
+This runs `npm run dev` with Netlify environment variables and functions.
+
+### Deploy
+
+```bash
+# Deploy to preview
+netlify deploy
+
+# Deploy to production
+netlify deploy --prod
+```
+
+## Edge Functions
+
+Netlify Edge Functions run on Deno at the edge:
+
+### Create Edge Function
+
+Create `netlify/edge-functions/hello.ts`:
+
+```typescript
+export default async (request: Request) => {
+  return new Response("Hello from the edge!");
+};
+
+export const config = { path: "/api/hello" };
+```
+
+### Deploy
+
+Edge functions deploy automatically with your site:
+
+```bash
+git add netlify/edge-functions/hello.ts
+git commit -m "Add edge function"
+git push
+```
+
+## Performance Optimization
+
+### Next.js Runtime
+
+Enable the Next.js Runtime plugin for optimal performance:
+
+1. Go to "Integrations" → "Next.js Runtime"
+2. Click "Enable" to install
+3. Redeploy your site
+
+Benefits:
+- Improved serverless function performance
+- Better image optimization
+- ISR (Incremental Static Regeneration) support
+
+### Image Optimization
+
+Netlify automatically optimizes images using Next.js Image Optimization:
+
+- On-demand image processing
+- Modern format conversion (WebP, AVIF)
+- Automatic responsive images
+
+Ensure you're using the `next/image` component:
+
+```tsx
+import Image from 'next/image';
+
+<Image 
+  src="/image.jpg" 
+  alt="Description"
+  width={800}
+  height={600}
+/>
+```
+
+### Caching
+
+Netlify provides automatic caching:
+
+- Static assets cached globally
+- Dynamic content with smart cache invalidation
+- Cache purge on deployment
+
+## Monitoring and Analytics
+
+### Netlify Analytics
+
+Enable server-side analytics (paid add-on):
+
+1. Go to "Analytics" tab
+2. Click "Enable Analytics"
+3. View traffic, performance, and geographic data
+
+No code changes required - analytics run at the CDN level.
+
+### Deploy Notifications
+
+Get notified about deployments:
+
+1. Go to "Site settings" → "Build & deploy" → "Deploy notifications"
+2. Add notifications for:
+   - Deploy started
+   - Deploy succeeded
+   - Deploy failed
+3. Choose notification method: Email, Slack, webhook
+
+### Build Logs
+
+View detailed build logs:
+
+1. Go to "Deploys" tab
+2. Click on any deployment
+3. View full build output and timing
+
+## Troubleshooting
+
+### Build Fails
+
+**Check build logs**:
+1. Go to "Deploys" tab
+2. Click on the failed deployment
+3. Review build logs for errors
+
+**Common issues**:
+```bash
+# Clear cache and retry
+netlify build --clear-cache
+
+# Check Node version
+node --version
+# Add .nvmrc file if needed:
+echo "18" > .nvmrc
+
+# Verify build locally
+npm run build
+```
+
+### Environment Variable Issues
+
+**Verify variables are set**:
+1. Go to "Site settings" → "Environment variables"
+2. Check all required variables are present
+3. Ensure correct scopes (Production, Deploy Previews)
+
+**Test locally with Netlify CLI**:
+```bash
+netlify dev
+```
+
+### Function Timeout
+
+Serverless functions timeout after 10 seconds (free tier) or 26 seconds (paid):
+
+- Optimize slow functions
+- Use Edge Functions for faster response times
+- Consider upgrading to Pro plan for longer timeouts
+
+### Image Loading Issues
+
+**Configure image domains** in `next.config.js`:
+
+```javascript
+module.exports = {
+  images: {
+    domains: ['your-image-domain.com'],
+  },
+};
+```
+
+Redeploy after changes:
+```bash
+git add next.config.js
+git commit -m "Update image domains"
+git push
+```
+
+## Best Practices
+
+<Note>
+  Follow these best practices for optimal Netlify deployments:
+</Note>
+
+1. **Use netlify.toml**: Define build settings in code
+2. **Environment Variables**: Never commit secrets to git
+3. **Test Locally**: Run `npm run build` before pushing
+4. **Deploy Previews**: Review preview URLs before merging
+5. **Enable Next.js Runtime**: Install the official plugin
+6. **Monitor Builds**: Set up deploy notifications
+7. **Optimize Functions**: Keep serverless functions fast
+8. **Use Edge Functions**: For latency-sensitive operations
+
+## Split Testing
+
+Run A/B tests with different branches:
+
+1. Create multiple branches with variations
+2. Enable branch deploys for each branch
+3. Go to "Split Testing" in site settings
+4. Set traffic split percentages
+5. Monitor performance and conversions
+
+## Additional Resources
+
+- [Netlify Documentation](https://docs.netlify.com/)
+- [Next.js on Netlify](https://docs.netlify.com/frameworks/next-js/overview/)
+- [Netlify CLI Documentation](https://docs.netlify.com/cli/get-started/)
+- [Edge Functions](https://docs.netlify.com/edge-functions/overview/)
+- [Environment Variables](https://docs.netlify.com/environment-variables/overview/)
+
+## Next Steps
+
+Your Pengrafic application is now live on Netlify! Consider:
+
+- Setting up a custom domain
+- Enabling deploy notifications
+- Configuring split testing
+- Adding edge functions for enhanced functionality
+- Monitoring performance with Netlify Analytics

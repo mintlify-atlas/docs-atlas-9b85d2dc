@@ -1,0 +1,288 @@
+---
+title: Features Component
+description: Showcase your services with icon-based feature cards in a responsive grid layout
+---
+
+The Features component displays your services or product features in a clean, icon-driven grid. Each feature includes an SVG icon, title, and description.
+
+## Import
+
+```tsx
+import Features from "@/components/Features";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import Features from "@/components/Features";
+
+    export default function Home() {
+      return (
+        <>
+          <Features />
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="With Data">
+    The component automatically pulls data from `featuresData.tsx`:
+    
+    ```tsx src/components/Features/index.tsx
+    import featuresData from "./featuresData";
+
+    const Features = () => {
+      return (
+        <section id="features" className="py-16 md:py-20 lg:py-28">
+          <SectionTitle
+            title="Soluciones Pengrafic"
+            paragraph="Nuestra agencia de marketing..."
+            center
+          />
+          <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+            {featuresData.map((feature) => (
+              <SingleFeature key={feature.id} feature={feature} />
+            ))}
+          </div>
+        </section>
+      );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Data Structure
+
+Features are defined in `src/components/Features/featuresData.tsx`:
+
+```tsx src/components/Features/featuresData.tsx
+import { Feature } from "@/types/feature";
+
+const featuresData: Feature[] = [
+  {
+    id: 1,
+    icon: (
+      <svg width="40" height="41" viewBox="0 0 40 41" className="fill-current">
+        {/* SVG paths */}
+      </svg>
+    ),
+    title: "Desarrollo Web",
+    paragraph: "Desarrollaremos la página web que necesita tu empresa...",
+  },
+  // More features...
+];
+```
+
+### Feature Type
+
+From `src/types/feature.ts`:
+
+```typescript
+export type Feature = {
+  id: number;
+  icon: JSX.Element;
+  title: string;
+  paragraph: string;
+};
+```
+
+<ParamField path="id" type="number" required>
+  Unique identifier for the feature (used as React key)
+</ParamField>
+
+<ParamField path="icon" type="JSX.Element" required>
+  SVG icon component (40x40px recommended)
+</ParamField>
+
+<ParamField path="title" type="string" required>
+  Feature title (e.g., "Desarrollo Web", "e-Commerce")
+</ParamField>
+
+<ParamField path="paragraph" type="string" required>
+  Detailed description of the feature or service
+</ParamField>
+
+## Component Props
+
+### SingleFeature
+
+The `SingleFeature` component renders individual feature cards:
+
+```tsx src/components/Features/SingleFeature.tsx
+const SingleFeature = ({ feature }: { feature: Feature }) => {
+  const { icon, title, paragraph } = feature;
+  return (
+    <div className="w-full">
+      <div className="wow fadeInUp" data-wow-delay=".15s">
+        <div className="mb-10 flex h-[70px] w-[70px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+          {icon}
+        </div>
+        <h3 className="mb-5 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
+          {title}
+        </h3>
+        <p className="pr-[10px] text-base font-medium leading-relaxed text-body-color">
+          {paragraph}
+        </p>
+      </div>
+    </div>
+  );
+};
+```
+
+<ParamField path="feature" type="Feature" required>
+  Feature object containing id, icon, title, and paragraph
+</ParamField>
+
+## Adding New Features
+
+<Steps>
+  <Step title="Create your icon">
+    Design or find an SVG icon (40x40px). Use `className="fill-current"` to inherit colors:
+    
+    ```tsx
+    const myIcon = (
+      <svg width="40" height="40" viewBox="0 0 40 40" className="fill-current">
+        <path d="..." />
+      </svg>
+    );
+    ```
+  </Step>
+  
+  <Step title="Add to featuresData">
+    Add your feature to the array in `featuresData.tsx`:
+    
+    ```tsx
+    {
+      id: 7,
+      icon: myIcon,
+      title: "SEO Optimization",
+      paragraph: "Improve your search rankings with our proven SEO strategies...",
+    }
+    ```
+  </Step>
+  
+  <Step title="Test responsive layout">
+    The grid automatically adjusts:
+    - Mobile: 1 column
+    - Tablet (md): 2 columns
+    - Desktop (lg): 3 columns
+  </Step>
+</Steps>
+
+## Customization
+
+### Section Title
+
+Modify the section heading in `src/components/Features/index.tsx`:
+
+```tsx
+<SectionTitle
+  title="Soluciones Pengrafic"
+  paragraph="Nuestra agencia de marketing te ofrece..."
+  center
+/>
+```
+
+### Grid Layout
+
+Change the number of columns:
+
+```tsx
+// Default: 1, 2, 3 columns
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+
+// Custom: 1, 3, 4 columns
+className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4"
+```
+
+### Icon Container
+
+Customize the icon background:
+
+```tsx
+// Default: Primary color with 10% opacity
+className="bg-primary bg-opacity-10 text-primary"
+
+// Custom: Different color
+className="bg-blue-500 bg-opacity-20 text-blue-600"
+
+// Custom: Larger size
+className="h-[90px] w-[90px]" // Instead of h-[70px] w-[70px]
+```
+
+### Spacing
+
+Adjust gaps between cards:
+
+```tsx
+// Default gaps
+className="gap-x-8 gap-y-14"
+
+// Tighter spacing
+className="gap-x-4 gap-y-8"
+
+// Wider spacing
+className="gap-x-12 gap-y-20"
+```
+
+## Default Features
+
+The template includes 6 pre-configured features:
+
+1. **Desarrollo Web** - Web development services
+2. **e-Commerce** - Online store solutions
+3. **Social Media** - Social media marketing
+4. **Google Ads** - PPC advertising
+5. **Branding** - Brand identity design
+6. **Programación de apps** - Mobile app development
+
+## Styling
+
+### Dark Mode
+
+Feature cards automatically adapt:
+
+```tsx
+className="text-black dark:text-white"  // Title
+className="text-body-color"              // Description (same in dark mode)
+```
+
+### Animations
+
+Cards use WOW.js animations:
+
+```tsx
+className="wow fadeInUp" data-wow-delay=".15s"
+```
+
+To disable animations, remove these attributes.
+
+## Accessibility
+
+- Section has `id="features"` for anchor navigation
+- Proper heading hierarchy (`<h3>` for feature titles)
+- Semantic HTML structure
+- Sufficient color contrast for text readability
+
+## Best Practices
+
+<Warning>
+  **Keep feature titles concise** - Aim for 2-4 words per title for scanability.
+</Warning>
+
+<Tip>
+  **Limit to 6-9 features** - Too many features can overwhelm users. Focus on your top services.
+</Tip>
+
+<Info>
+  **Consistent icon style** - Use icons from the same set or design system for visual cohesion.
+</Info>
+
+## Related Components
+
+- [SectionTitle](/components/overview#shared-components) - Shared title component
+- [Hero](/components/hero) - Often placed before Features
+- [Pricing](/components/pricing) - Natural next step after features

@@ -1,0 +1,366 @@
+---
+title: 'Deploy to Vercel'
+description: 'Step-by-step guide to deploy your Pengrafic Next.js application to Vercel'
+---
+
+## Why Vercel?
+
+Vercel is the platform created by the makers of Next.js, offering the best deployment experience:
+
+- **Zero Configuration**: Automatic detection of Next.js projects
+- **Instant Deployments**: Deploy in seconds with git push
+- **Global CDN**: Edge network for optimal performance
+- **Preview Deployments**: Automatic preview URLs for pull requests
+- **Serverless Functions**: Automatic API route handling
+- **Built-in Analytics**: Performance monitoring included
+
+## Prerequisites
+
+- GitHub, GitLab, or Bitbucket account
+- Your Pengrafic project pushed to a git repository
+- Vercel account (free tier available)
+
+## Deployment Steps
+
+<Steps>
+  <Step title="Create Vercel Account">
+    Visit [vercel.com](https://vercel.com) and sign up with your git provider:
+    
+    - Click "Sign Up"
+    - Choose GitHub, GitLab, or Bitbucket
+    - Authorize Vercel to access your repositories
+  </Step>
+
+  <Step title="Import Your Project">
+    From your Vercel dashboard:
+    
+    1. Click "Add New..." → "Project"
+    2. Select your git provider
+    3. Find your Pengrafic repository
+    4. Click "Import"
+    
+    <Note>
+      If you don't see your repository, click "Adjust GitHub App Permissions" to grant access.
+    </Note>
+  </Step>
+
+  <Step title="Configure Project">
+    Vercel automatically detects Next.js projects. Verify the settings:
+    
+    **Framework Preset**: Next.js (auto-detected)
+    
+    **Build & Development Settings**:
+    ```bash
+    Build Command: npm run build
+    Output Directory: .next (auto-detected)
+    Install Command: npm install
+    Development Command: npm run dev
+    ```
+    
+    These values are read from your `package.json` and should not need modification.
+  </Step>
+
+  <Step title="Configure Environment Variables">
+    Add your environment variables:
+    
+    1. Expand the "Environment Variables" section
+    2. Add each variable with its key and value
+    
+    Example variables:
+    ```bash
+    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+    NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+    ```
+    
+    <Note>
+      You can add different values for Production, Preview, and Development environments.
+    </Note>
+  </Step>
+
+  <Step title="Deploy">
+    Click "Deploy" and wait for the build to complete:
+    
+    - Build process runs `npm run build`
+    - TypeScript compilation
+    - Asset optimization
+    - Deployment to edge network
+    
+    Your site will be live in 1-2 minutes!
+  </Step>
+</Steps>
+
+## Post-Deployment Configuration
+
+### Custom Domain
+
+<Steps>
+  <Step title="Add Domain">
+    In your project settings:
+    
+    1. Go to "Settings" → "Domains"
+    2. Click "Add"
+    3. Enter your domain name (e.g., `yourdomain.com`)
+    4. Click "Add"
+  </Step>
+
+  <Step title="Configure DNS">
+    Vercel will provide DNS records. Add them to your domain provider:
+    
+    **For root domain (yourdomain.com)**:
+    ```
+    Type: A
+    Name: @
+    Value: 76.76.21.21
+    ```
+    
+    **For www subdomain**:
+    ```
+    Type: CNAME
+    Name: www
+    Value: cname.vercel-dns.com
+    ```
+  </Step>
+
+  <Step title="Verify Domain">
+    Wait for DNS propagation (can take up to 48 hours, usually minutes):
+    
+    - Vercel automatically verifies the domain
+    - SSL certificate is automatically provisioned
+    - Your site becomes accessible at your custom domain
+  </Step>
+</Steps>
+
+### Environment Variables Management
+
+Update environment variables after deployment:
+
+1. Go to "Settings" → "Environment Variables"
+2. Click on a variable to edit or delete
+3. Click "Add" to create new variables
+4. Redeploy to apply changes (or they'll apply on next deployment)
+
+<Note>
+  Changes to environment variables require a new deployment to take effect. Click "Redeploy" from the Deployments tab.
+</Note>
+
+## Automatic Deployments
+
+Vercel automatically deploys your project:
+
+### Production Deployments
+
+- Triggered by pushes to your main/master branch
+- Deployed to your production domain
+- Runs full build and optimization
+
+```bash
+git add .
+git commit -m "Update feature"
+git push origin main
+```
+
+### Preview Deployments
+
+- Created for every pull request
+- Unique preview URL for each PR
+- Perfect for testing before merging
+
+```bash
+git checkout -b feature-branch
+git add .
+git commit -m "Add new feature"
+git push origin feature-branch
+# Open pull request on GitHub
+```
+
+## Vercel CLI (Optional)
+
+Deploy directly from your terminal:
+
+### Installation
+
+```bash
+npm install -g vercel
+```
+
+### Login
+
+```bash
+vercel login
+```
+
+### Deploy
+
+```bash
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+### Link Project
+
+Link your local project to Vercel:
+
+```bash
+vercel link
+```
+
+## Performance Optimization
+
+### Edge Functions
+
+Vercel automatically deploys API routes as edge functions for optimal performance:
+
+- Global edge network
+- Low latency worldwide
+- Automatic scaling
+
+### Image Optimization
+
+Next.js Image Optimization is automatically enabled:
+
+- On-demand image optimization
+- Modern format conversion (WebP, AVIF)
+- Automatic responsive images
+
+### Caching
+
+Vercel provides intelligent caching:
+
+- Static assets cached at the edge
+- Dynamic content with optimal cache headers
+- Automatic cache invalidation on deployment
+
+## Monitoring and Analytics
+
+### Vercel Analytics
+
+Enable built-in analytics:
+
+1. Go to "Analytics" tab in your project
+2. Click "Enable Analytics"
+3. Install the package:
+
+```bash
+npm install @vercel/analytics
+```
+
+4. Add to your root layout:
+
+```typescript
+import { Analytics } from '@vercel/analytics/react';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <Analytics />
+      </body>
+    </html>
+  );
+}
+```
+
+### Real-time Logs
+
+View logs in real-time:
+
+1. Go to your project dashboard
+2. Click on a deployment
+3. View "Functions" tab for serverless function logs
+4. View "Build Logs" for build output
+
+## Troubleshooting
+
+### Build Fails
+
+**Check build logs**:
+1. Click on the failed deployment
+2. Review the build logs
+3. Fix errors in your code
+4. Push changes to trigger new deployment
+
+**Common issues**:
+- TypeScript errors: Run `npm run build` locally first
+- Missing dependencies: Ensure `package.json` is up to date
+- Environment variables: Check they're set correctly
+
+### Runtime Errors
+
+**View function logs**:
+1. Go to your project dashboard
+2. Click "Functions" tab
+3. View real-time logs and errors
+
+**Check environment variables**:
+- Verify all required variables are set
+- Ensure `NEXT_PUBLIC_` prefix for client-side variables
+- Redeploy after updating variables
+
+### Image Issues
+
+**Configure image domains** in `next.config.js`:
+
+```javascript
+module.exports = {
+  images: {
+    domains: ['your-image-domain.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.your-cdn.com',
+      },
+    ],
+  },
+};
+```
+
+Redeploy after updating configuration.
+
+### Performance Issues
+
+**Check Analytics**:
+- Review Core Web Vitals scores
+- Identify slow pages and functions
+- Optimize based on data
+
+**Optimize bundle size**:
+```bash
+# Analyze bundle
+npm run build
+```
+
+## Best Practices
+
+<Note>
+  Follow these best practices for optimal Vercel deployments:
+</Note>
+
+1. **Use Environment Variables**: Never commit secrets to git
+2. **Test Locally**: Run `npm run build` before pushing
+3. **Preview Deployments**: Review preview URLs before merging
+4. **Monitor Performance**: Enable Vercel Analytics
+5. **Optimize Images**: Use `next/image` component
+6. **Leverage Caching**: Use appropriate cache headers
+7. **Review Logs**: Check function logs regularly
+
+## Additional Resources
+
+- [Vercel Documentation](https://vercel.com/docs)
+- [Next.js on Vercel](https://vercel.com/docs/frameworks/nextjs)
+- [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables)
+- [Custom Domains](https://vercel.com/docs/concepts/projects/domains)
+- [Vercel CLI](https://vercel.com/docs/cli)
+
+## Next Steps
+
+Your Pengrafic application is now live on Vercel! Consider:
+
+- Setting up a custom domain
+- Enabling Vercel Analytics
+- Configuring preview deployments
+- Adding monitoring and error tracking

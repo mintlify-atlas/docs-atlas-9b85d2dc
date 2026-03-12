@@ -1,0 +1,269 @@
+---
+title: Installation
+description: Get started with Pengrafic Next.js template by installing dependencies and setting up your development environment
+---
+
+## System Requirements
+
+Before installing Pengrafic, ensure your system meets these requirements:
+
+- **Node.js**: 18.x or higher
+- **Package Manager**: npm, yarn, or pnpm
+- **Operating System**: macOS, Windows, or Linux
+
+<Note>
+This template is built with Next.js 14.1.0 and React 18.2.0, ensuring you have access to the latest features including the App Router and Server Components.
+</Note>
+
+## Installation Methods
+
+<Steps>
+
+<Step title="Clone or Download the Repository">
+
+First, get the Pengrafic template on your local machine:
+
+<CodeGroup>
+
+```bash git
+git clone https://github.com/your-repo/pengrafic-template.git
+cd pengrafic-template
+```
+
+```bash download
+# Or download and extract the ZIP file
+unzip pengrafic-template.zip
+cd pengrafic-template
+```
+
+</CodeGroup>
+
+</Step>
+
+<Step title="Install Dependencies">
+
+Install all required packages using your preferred package manager:
+
+<CodeGroup>
+
+```bash npm
+npm install
+```
+
+```bash yarn
+yarn install
+```
+
+```bash pnpm
+pnpm install
+```
+
+</CodeGroup>
+
+The template includes these key dependencies:
+
+- **Next.js** (^14.1.0) - React framework
+- **React** (^18.2.0) - UI library  
+- **Tailwind CSS** (^3.4.1) - Utility-first CSS
+- **TypeScript** (^5.3.3) - Type safety
+- **Framer Motion** (^12.7.4) - Animations
+- **Supabase** (^2.81.1) - Backend services
+- **next-themes** (^0.2.1) - Dark mode support
+
+</Step>
+
+<Step title="Environment Configuration">
+
+If you plan to use Supabase for authentication or database features, create a `.env.local` file in the root directory:
+
+```bash .env.local
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+<Warning>
+Never commit your `.env.local` file to version control. It's already included in `.gitignore` by default.
+</Warning>
+
+**To get your Supabase credentials:**
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Go to Project Settings → API
+3. Copy your project URL and anon/public key
+
+<Tip>
+If you're not using Supabase, you can skip this step. The template will work without it for static pages.
+</Tip>
+
+</Step>
+
+<Step title="Start Development Server">
+
+Run the development server:
+
+<CodeGroup>
+
+```bash npm
+npm run dev
+```
+
+```bash yarn
+yarn dev
+```
+
+```bash pnpm
+pnpm dev
+```
+
+</CodeGroup>
+
+Your application will be available at [http://localhost:3000](http://localhost:3000)
+
+</Step>
+
+</Steps>
+
+## Project Structure
+
+After installation, you'll see this structure:
+
+```
+pengrafic-template/
+├── src/
+│   ├── app/              # Next.js App Router pages
+│   │   ├── layout.tsx    # Root layout with metadata
+│   │   ├── page.tsx      # Home page
+│   │   ├── about/        # About page
+│   │   ├── blog/         # Blog pages
+│   │   └── contact/      # Contact page
+│   ├── components/       # React components
+│   │   ├── Hero/         # Hero section
+│   │   ├── Features/     # Features section
+│   │   ├── Header/       # Navigation
+│   │   ├── Footer/       # Footer
+│   │   └── ...
+│   ├── lib/              # Utility functions
+│   │   └── supabaseClient.ts
+│   └── types/            # TypeScript types
+├── public/               # Static assets
+├── tailwind.config.js    # Tailwind configuration
+├── next.config.js        # Next.js configuration
+└── package.json          # Dependencies
+```
+
+## Build for Production
+
+When you're ready to deploy:
+
+<CodeGroup>
+
+```bash npm
+npm run build
+npm run start
+```
+
+```bash yarn
+yarn build
+yarn start
+```
+
+```bash pnpm
+pnpm build
+pnpm start
+```
+
+</CodeGroup>
+
+The build command:
+- Optimizes your application for production
+- Generates static pages where possible
+- Minifies JavaScript and CSS
+- Optimizes images
+
+## Verification
+
+To verify your installation is successful:
+
+1. ✅ Development server starts without errors
+2. ✅ Home page loads at `localhost:3000`
+3. ✅ Dark mode toggle works
+4. ✅ Navigation between pages works smoothly
+5. ✅ No console errors in browser DevTools
+
+## Troubleshooting
+
+<AccordionGroup>
+
+<Accordion title="Port 3000 already in use">
+
+If port 3000 is occupied, Next.js will automatically try port 3001. Or specify a different port:
+
+```bash
+npm run dev -- -p 3001
+```
+
+</Accordion>
+
+<Accordion title="Module not found errors">
+
+Delete `node_modules` and reinstall:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+</Accordion>
+
+<Accordion title="TypeScript errors">
+
+Ensure you're using Node.js 18.x or higher:
+
+```bash
+node --version
+```
+
+Then rebuild:
+
+```bash
+npm run build
+```
+
+</Accordion>
+
+<Accordion title="Supabase connection issues">
+
+Verify your environment variables:
+
+1. Check `.env.local` exists in root directory
+2. Verify credentials are correct
+3. Ensure no extra spaces in variable values
+4. Restart the dev server after changing env variables
+
+</Accordion>
+
+</AccordionGroup>
+
+## Next Steps
+
+Now that you have Pengrafic installed:
+
+<CardGroup cols={2}>
+
+<Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+  Learn how to customize your first page and add components
+</Card>
+
+<Card title="Configuration" icon="gear" href="/configuration">
+  Configure theme colors, fonts, and site metadata
+</Card>
+
+<Card title="Components" icon="puzzle-piece" href="/components">
+  Explore available components and how to use them
+</Card>
+
+<Card title="Deployment" icon="cloud" href="/deployment">
+  Deploy your site to Vercel, Netlify, or other platforms
+</Card>
+
+</CardGroup>

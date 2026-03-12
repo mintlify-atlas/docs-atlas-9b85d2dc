@@ -1,0 +1,253 @@
+---
+title: Dark Mode
+description: Learn how to implement and customize dark mode in your Pengrafic Next.js template using next-themes
+---
+
+## Overview
+
+The Pengrafic template includes a fully functional dark mode system powered by [next-themes](https://github.com/pacocoursey/next-themes). The implementation provides seamless theme switching with proper SSR support and no flash of unstyled content.
+
+## Implementation
+
+### Theme Provider Setup
+
+The dark mode functionality is configured in `src/app/providers.tsx`:
+
+```tsx src/app/providers.tsx
+"use client";
+
+import { ThemeProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+**Configuration options:**
+- `attribute="class"` - Adds a `class="dark"` to the `<html>` element when dark mode is active
+- `enableSystem={false}` - Disables automatic system preference detection
+- `defaultTheme="dark"` - Sets dark mode as the default theme
+
+### Theme Toggler Component
+
+The theme toggle button is implemented in `src/components/Header/ThemeToggler.tsx`:
+
+```tsx src/components/Header/ThemeToggler.tsx
+import { useTheme } from "next-themes";
+
+const ThemeToggler = () => {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button 
+      aria-label='theme toggler'
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="flex items-center justify-center text-black rounded-full cursor-pointer bg-gray-2 dark:bg-dark-bg h-9 w-9 dark:text-white md:h-14 md:w-14"
+    >
+      {/* Moon icon - visible in light mode */}
+      <svg
+        viewBox="0 0 23 23"
+        className="w-5 h-5 stroke-current dark:hidden md:h-6 md:w-6"
+        fill="none"
+      >
+        <path
+          d="M9.55078 1.5C5.80078 1.5 1.30078 5.25 1.30078 11.25C1.30078 17.25 5.80078 21.75 11.8008 21.75C17.8008 21.75 21.5508 17.25 21.5508 13.5C13.3008 18.75 4.30078 9.75 9.55078 1.5Z"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {/* Sun icon - visible in dark mode */}
+      <svg
+        viewBox="0 0 25 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="hidden w-5 h-5 dark:block md:h-6 md:w-6"
+      >
+        {/* Sun icon paths... */}
+      </svg>
+    </button>
+  );
+};
+
+export default ThemeToggler;
+```
+
+## Using Dark Mode in Components
+
+### Tailwind Dark Mode Classes
+
+The template uses Tailwind's `dark:` variant to style components for dark mode. The dark mode is configured in `tailwind.config.js`:
+
+```js tailwind.config.js
+module.exports = {
+  darkMode: "class",
+  // ...
+};
+```
+
+### Common Dark Mode Patterns
+
+**Background colors:**
+```tsx
+<div className="bg-white dark:bg-gray-dark">
+  Content
+</div>
+```
+
+**Text colors:**
+```tsx
+<h1 className="text-black dark:text-white">
+  Heading
+</h1>
+<p className="text-body-color dark:text-body-color-dark">
+  Paragraph text
+</p>
+```
+
+**Borders and shadows:**
+```tsx
+<div className="border-stroke dark:border-body-color/20">
+  Content with border
+</div>
+<div className="shadow-three dark:shadow-submit-dark">
+  Content with shadow
+</div>
+```
+
+## Real-World Examples
+
+### Hero Section
+
+From `src/components/Hero/index1.tsx`:
+
+```tsx
+<section className="relative z-10 overflow-hidden bg-white pb-16 pt-[120px] dark:bg-gray-dark md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px]">
+  <div className="container">
+    <h1 className="mb-5 text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-5xl">
+      Potencia tu negocio
+    </h1>
+    <p className="mb-12 text-base text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
+      Atrae más clientes
+    </p>
+  </div>
+</section>
+```
+
+### Header Component
+
+From `src/components/Header/index.tsx`:
+
+```tsx
+<header
+  className={`header left-0 top-0 z-40 flex w-full items-center ${
+    sticky
+      ? "dark:bg-gray-dark dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition"
+      : "absolute bg-transparent"
+  }`}
+>
+  {/* Header content */}
+</header>
+```
+
+### Form Inputs
+
+From `src/app/signin/page.tsx`:
+
+```tsx
+<input
+  type="email"
+  name="email"
+  placeholder="Enter your Email"
+  className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
+/>
+```
+
+## Customization
+
+### Changing the Default Theme
+
+To default to light mode instead, update `src/app/providers.tsx`:
+
+```tsx
+<ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
+  {children}
+</ThemeProvider>
+```
+
+### Enabling System Preference
+
+To respect the user's system theme preference:
+
+```tsx
+<ThemeProvider attribute="class" enableSystem={true}>
+  {children}
+</ThemeProvider>
+```
+
+### Custom Theme Colors
+
+Dark mode colors are defined in `tailwind.config.js`:
+
+```js tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        "bg-color-dark": "#111b33",
+        "body-color": {
+          DEFAULT: "#788293",
+          dark: "#959CB1",
+        },
+        gray: {
+          dark: "#111b33",
+          light: "#F0F2F9",
+        },
+      },
+    },
+  },
+};
+```
+
+<Warning>
+  When adding dark mode styles, always test both themes to ensure proper contrast and readability. Use the `dark:` variant consistently across your components.
+</Warning>
+
+## Programmatic Theme Control
+
+You can control the theme programmatically in any client component:
+
+```tsx
+"use client";
+import { useTheme } from "next-themes";
+
+export default function ThemeController() {
+  const { theme, setTheme, systemTheme } = useTheme();
+  
+  return (
+    <div>
+      <button onClick={() => setTheme('light')}>Light</button>
+      <button onClick={() => setTheme('dark')}>Dark</button>
+      <button onClick={() => setTheme('system')}>System</button>
+      <p>Current theme: {theme}</p>
+    </div>
+  );
+}
+```
+
+## SSR Considerations
+
+The `ThemeProvider` is wrapped in a client component (`"use client"`) to prevent hydration mismatches. The layout structure in `src/app/layout.tsx` includes:
+
+```tsx
+<html suppressHydrationWarning lang="en">
+  <RootClientLayout interFont={inter}>
+    {children}
+  </RootClientLayout>
+</html>
+```
+
+The `suppressHydrationWarning` attribute prevents warnings during the initial theme mount.

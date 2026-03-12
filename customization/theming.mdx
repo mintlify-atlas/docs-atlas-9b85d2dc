@@ -1,0 +1,154 @@
+---
+title: 'Theming'
+description: 'Configure and customize the theme system for light and dark modes'
+---
+
+## Overview
+
+Pengrafic uses [next-themes](https://github.com/pacocoursey/next-themes) for seamless dark mode support. The theme system is configured at the application level and supports both light and dark color schemes.
+
+## Theme Configuration
+
+The theme system is initialized in the `ThemeProvider` component, which wraps your entire application.
+
+### Provider Setup
+
+The theme provider is configured in `src/app/providers.tsx`:
+
+```tsx src/app/providers.tsx
+"use client";
+
+import { ThemeProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+### Provider Options
+
+| Option | Value | Description |
+|--------|-------|-------------|
+| `attribute` | `"class"` | Uses class-based theme switching (adds `dark` class to `<html>`) |
+| `enableSystem` | `false` | Disables automatic system preference detection |
+| `defaultTheme` | `"dark"` | Sets dark mode as the default theme |
+
+<Note>
+The theme provider must be a client component (`"use client"`) because it uses React context and browser APIs.
+</Note>
+
+## Tailwind Configuration
+
+Dark mode is configured in `tailwind.config.js` using the `class` strategy:
+
+```js tailwind.config.js
+module.exports = {
+  darkMode: "class",
+  // ... rest of config
+};
+```
+
+This allows you to use dark mode variants in your components:
+
+```tsx
+<div className="bg-white dark:bg-black">
+  <h1 className="text-black dark:text-white">Hello World</h1>
+</div>
+```
+
+## Customizing Theme Behavior
+
+### Change Default Theme
+
+To set light mode as default, update the `defaultTheme` prop:
+
+<CodeGroup>
+
+```tsx Light Mode Default
+<ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
+  {children}
+</ThemeProvider>
+```
+
+```tsx Dark Mode Default
+<ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
+  {children}
+</ThemeProvider>
+```
+
+</CodeGroup>
+
+### Enable System Preference
+
+To respect user's system dark mode preference:
+
+```tsx src/app/providers.tsx
+<ThemeProvider attribute="class" enableSystem={true} defaultTheme="system">
+  {children}
+</ThemeProvider>
+```
+
+<Tip>
+When `enableSystem` is enabled, the theme will automatically match the user's operating system preference.
+</Tip>
+
+## Theme Toggle Component
+
+Implement a theme switcher using the `useTheme` hook:
+
+```tsx components/ThemeToggle.tsx
+"use client";
+
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="rounded-lg bg-gray-200 p-2 dark:bg-gray-800"
+    >
+      {theme === "dark" ? "🌞" : "🌙"}
+    </button>
+  );
+}
+```
+
+## Preventing Flash of Unstyled Content
+
+The template includes `suppressHydrationWarning` on the `<html>` element to prevent warnings during theme initialization:
+
+```tsx src/app/layout.tsx
+<html suppressHydrationWarning lang="en">
+  <RootClientLayout interFont={inter}>
+    {children}
+  </RootClientLayout>
+</html>
+```
+
+<Note>
+This is necessary because next-themes modifies the HTML element before React hydration completes.
+</Note>
+
+## Best Practices
+
+1. **Always use dark mode variants**: When styling components, always provide both light and dark mode styles
+2. **Test both themes**: Ensure your UI looks good in both light and dark modes
+3. **Use semantic colors**: Prefer using the defined color tokens like `body-color` instead of hardcoded values
+4. **Client components only**: The `useTheme` hook only works in client components
+
+## Related
+
+- [Colors](/customization/colors) - Learn about the color system
+- [Typography](/customization/typography) - Configure fonts and text styles

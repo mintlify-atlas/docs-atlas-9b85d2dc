@@ -1,0 +1,330 @@
+---
+title: About Component
+description: Tell your company story with two-section about component including mission, vision, and values
+---
+
+The About component consists of two sections (AboutSectionOne and AboutSectionTwo) that tell your company's story with images, lists, and detailed text.
+
+## Import
+
+```tsx
+import AboutSectionOne from "@/components/About/AboutSectionOne";
+import AboutSectionTwo from "@/components/About/AboutSectionTwo";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import AboutSectionOne from "@/components/About/AboutSectionOne";
+    import AboutSectionTwo from "@/components/About/AboutSectionTwo";
+
+    export default function Home() {
+      return (
+        <>
+          <AboutSectionOne />
+          <AboutSectionTwo />
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Full Page Example">
+    ```tsx src/app/page.tsx
+    import Hero from "@/components/Hero/index1";
+    import Features from "@/components/Features";
+    import AboutSectionOne from "@/components/About/AboutSectionOne";
+    import AboutSectionTwo from "@/components/About/AboutSectionTwo";
+    import Testimonials from "@/components/Testimonials";
+
+    export default function Home() {
+      return (
+        <>
+          <Hero />
+          <Features />
+          <AboutSectionOne />
+          <AboutSectionTwo />
+          <Testimonials />
+        </>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## AboutSectionOne
+
+The first about section features a two-column layout with text on the left and an image on the right.
+
+### Structure
+
+```tsx src/components/About/AboutSectionOne.tsx
+const AboutSectionOne = () => {
+  return (
+    <section id="about" className="pt-16 md:pt-20 lg:pt-28">
+      <div className="container">
+        <div className="border-b border-body-color/[.15] pb-16 dark:border-white/[.15] md:pb-20 lg:pb-28">
+          <div className="-mx-4 flex flex-wrap items-center">
+            {/* Left: Text content */}
+            <div className="w-full px-4 lg:w-1/2">
+              <SectionTitle {...} />
+              <List items />
+            </div>
+            {/* Right: Image */}
+            <div className="w-full px-4 lg:w-1/2">
+              <Image />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+```
+
+### Features List
+
+The component includes a reusable `List` component:
+
+```tsx src/components/About/AboutSectionOne.tsx
+const List = ({ text }) => (
+  <p className="mb-5 flex items-center text-lg font-medium text-body-color">
+    <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+      {checkIcon}
+    </span>
+    {text}
+  </p>
+);
+```
+
+### Customization
+
+<Tabs>
+  <Tab title="Update Title">
+    ```tsx
+    <SectionTitle
+      title="Your Custom Title"
+      paragraph="Your description here..."
+      mb="44px"
+    />
+    ```
+  </Tab>
+  
+  <Tab title="Modify List Items">
+    ```tsx
+    <List text="Premium quality" />
+    <List text="Tailwind CSS" />
+    <List text="Use for lifetime" />
+    // Add more items or change text
+    ```
+  </Tab>
+  
+  <Tab title="Change Images">
+    ```tsx
+    <Image
+      src="/images/about/your-image.svg"
+      alt="about-image"
+      fill
+      className="mx-auto max-w-full drop-shadow-three dark:hidden"
+    />
+    ```
+    
+    The component uses separate images for light/dark mode.
+  </Tab>
+</Tabs>
+
+## AboutSectionTwo
+
+The second section reverses the layout (image left, text right) and focuses on mission, vision, and values.
+
+### Structure
+
+```tsx src/components/About/AboutSectionTwo.tsx
+const AboutSectionTwo = () => {
+  return (
+    <section className="py-16 md:py-20 lg:py-28">
+      <div className="container">
+        <div className="-mx-4 flex flex-wrap items-center">
+          {/* Left: Image */}
+          <div className="w-full px-4 lg:w-1/2">
+            <Image />
+          </div>
+          {/* Right: Mission, Vision, Values */}
+          <div className="w-full px-4 lg:w-1/2">
+            <div className="mb-9">
+              <h3>Misión</h3>
+              <p>...</p>
+            </div>
+            <div className="mb-9">
+              <h3>Visión</h3>
+              <p>...</p>
+            </div>
+            <div className="mb-1">
+              <h3>Nuestros Valores</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+```
+
+### Content Blocks
+
+Each content block follows this pattern:
+
+```tsx
+<div className="mb-9">
+  <h3 className="mb-4 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
+    Heading
+  </h3>
+  <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+    Content paragraph
+  </p>
+</div>
+```
+
+## Customization Examples
+
+### Add More Content Blocks
+
+```tsx src/components/About/AboutSectionTwo.tsx
+<div className="mb-9">
+  <h3 className="mb-4 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
+    Our Team
+  </h3>
+  <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+    We're a passionate group of designers and developers...
+  </p>
+</div>
+```
+
+### Swap Layout Direction
+
+Reverse the order on mobile by changing flex order:
+
+```tsx
+<div className="w-full px-4 lg:w-1/2 order-2 lg:order-1">
+  {/* Image */}
+</div>
+<div className="w-full px-4 lg:w-1/2 order-1 lg:order-2">
+  {/* Content */}
+</div>
+```
+
+### Remove Bottom Border
+
+In AboutSectionOne, remove the border:
+
+```tsx
+// Remove or modify this class
+className="border-b border-body-color/[.15] pb-16 dark:border-white/[.15]"
+```
+
+## Styling
+
+### Images
+
+Both sections use SVG images with light/dark variants:
+
+```tsx
+{/* Light mode */}
+<Image
+  src="/images/about/about-image.svg"
+  alt="about-image"
+  fill
+  className="dark:hidden"
+/>
+
+{/* Dark mode */}
+<Image
+  src="/images/about/about-image-dark.svg"
+  alt="about-image"
+  fill
+  className="hidden dark:block"
+/>
+```
+
+### Responsive Spacing
+
+```tsx
+// Section padding
+className="pt-16 md:pt-20 lg:pt-28"
+className="py-16 md:py-20 lg:py-28"
+
+// Container padding bottom
+className="pb-16 md:pb-20 lg:pb-28"
+```
+
+### Column Layout
+
+```tsx
+// Mobile: Full width, Desktop: Half width
+className="w-full lg:w-1/2"
+```
+
+## Accessibility
+
+- AboutSectionOne has `id="about"` for anchor navigation
+- Proper heading hierarchy (h3 subheadings)
+- Semantic HTML with `<section>` wrappers
+- Alt text for all images
+- Sufficient color contrast
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep it scannable">
+    Use short paragraphs and clear headings. Break up long text into digestible chunks.
+  </Accordion>
+  
+  <Accordion title="Use high-quality images">
+    SVG images scale perfectly. If using photos, ensure they're optimized and at least 1000px wide.
+  </Accordion>
+  
+  <Accordion title="Show, don't just tell">
+    Use the List component to highlight key features or achievements with visual indicators.
+  </Accordion>
+  
+  <Accordion title="Maintain visual balance">
+    Keep text and image sections roughly equal in visual weight.
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Two-Column Split
+
+Both sections use the same layout pattern:
+
+```tsx
+<div className="flex flex-wrap items-center">
+  <div className="w-full lg:w-1/2">{/* Column 1 */}</div>
+  <div className="w-full lg:w-1/2">{/* Column 2 */}</div>
+</div>
+```
+
+### Check Icon List
+
+Reuse the List component pattern throughout your app:
+
+```tsx
+const List = ({ text }) => (
+  <p className="mb-5 flex items-center text-lg font-medium text-body-color">
+    <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+      {checkIcon}
+    </span>
+    {text}
+  </p>
+);
+```
+
+## Related Components
+
+- [SectionTitle](/components/overview#shared-components) - Shared title component
+- [Features](/components/features) - Often placed before About sections
+- [Testimonials](/components/testimonials) - Build credibility after About

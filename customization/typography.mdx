@@ -1,0 +1,367 @@
+---
+title: 'Typography'
+description: 'Configure fonts, text styles, and responsive typography'
+---
+
+## Overview
+
+Pengrafic uses the Inter font family from Google Fonts, providing a modern and highly legible typeface optimized for digital interfaces.
+
+## Font Configuration
+
+### Primary Font: Inter
+
+The Inter font is loaded using Next.js's built-in font optimization:
+
+```tsx src/app/layout.tsx
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
+```
+
+### Font Application
+
+The font is applied to the entire application through the body element:
+
+```tsx src/app/RootClientLayout.tsx
+<body className={`bg-[#FCFCFC] dark:bg-black ${interFont.className}`}>
+  <Providers>
+    {/* Your app content */}
+  </Providers>
+</body>
+```
+
+### CSS Font Family
+
+The font is also defined in the base CSS layer:
+
+```css src/styles/index.css
+@layer base {
+  body {
+    font-family: "Inter", sans-serif;
+  }
+}
+```
+
+<Note>
+Next.js automatically optimizes font loading, eliminating layout shift and improving performance.
+</Note>
+
+## Font Weights Available
+
+Inter is imported with all weight variants:
+
+```css
+/* Available weights: 100-900 */
+font-weight: 100;  /* Thin */
+font-weight: 200;  /* Extra Light */
+font-weight: 300;  /* Light */
+font-weight: 400;  /* Regular */
+font-weight: 500;  /* Medium */
+font-weight: 600;  /* Semi Bold */
+font-weight: 700;  /* Bold */
+font-weight: 800;  /* Extra Bold */
+font-weight: 900;  /* Black */
+```
+
+## Using Font Weights
+
+<CodeGroup>
+
+```tsx Light Text
+<p className="font-light">Light weight text (300)</p>
+```
+
+```tsx Regular Text
+<p className="font-normal">Regular text (400)</p>
+```
+
+```tsx Medium Text
+<p className="font-medium">Medium weight text (500)</p>
+```
+
+```tsx Semi Bold
+<h3 className="font-semibold">Semi bold heading (600)</h3>
+```
+
+```tsx Bold Text
+<h2 className="font-bold">Bold heading (700)</h2>
+```
+
+</CodeGroup>
+
+## Text Colors
+
+Pengrafic provides semantic text colors that adapt to theme:
+
+### Body Text
+
+```tsx
+<p className="text-body-color dark:text-body-color-dark">
+  This is body text that adapts to light and dark modes.
+</p>
+```
+
+- **Light mode**: `#788293`
+- **Dark mode**: `#959CB1`
+
+### Primary Text
+
+```tsx
+<span className="text-primary">Primary colored text</span>
+```
+
+### Black & White Text
+
+<CodeGroup>
+
+```tsx Dark Text
+<h1 className="text-black dark:text-white">
+  Heading that inverts in dark mode
+</h1>
+```
+
+```tsx Always Black
+<p className="text-black">
+  Always black text
+</p>
+```
+
+```tsx Always White
+<p className="text-white">
+  Always white text
+</p>
+```
+
+</CodeGroup>
+
+## Responsive Typography
+
+Tailwind's responsive utilities work seamlessly with typography:
+
+### Responsive Font Sizes
+
+```tsx
+<h1 className="text-2xl md:text-4xl lg:text-5xl xl:text-6xl">
+  Responsive Heading
+</h1>
+
+<p className="text-sm md:text-base lg:text-lg">
+  Responsive paragraph text
+</p>
+```
+
+### Responsive Font Weights
+
+```tsx
+<h2 className="font-medium md:font-semibold lg:font-bold">
+  Weight increases on larger screens
+</h2>
+```
+
+## Custom Font Sizes
+
+While Pengrafic uses Tailwind's default font size scale, you can extend it:
+
+```js tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      fontSize: {
+        'xxs': '0.625rem',     // 10px
+        'huge': '5rem',        // 80px
+        'display': '6rem',     // 96px
+      },
+    },
+  },
+};
+```
+
+Usage:
+
+```tsx
+<h1 className="text-display font-bold">
+  Huge Display Heading
+</h1>
+```
+
+## Line Height
+
+Control line spacing for better readability:
+
+```tsx
+<p className="leading-relaxed">  {/* 1.625 */}
+  Relaxed line spacing for comfortable reading
+</p>
+
+<p className="leading-loose">    {/* 2 */}
+  Loose line spacing for emphasis
+</p>
+
+<h1 className="leading-tight">   {/* 1.25 */}
+  Tight line height for headlines
+</h1>
+```
+
+## Letter Spacing
+
+```tsx
+<h1 className="tracking-tight">Tight tracking</h1>
+<p className="tracking-normal">Normal tracking</p>
+<span className="tracking-wide">Wide tracking</span>
+<span className="tracking-widest">Widest tracking</span>
+```
+
+## Text Utilities
+
+### Text Alignment
+
+```tsx
+<p className="text-left md:text-center lg:text-right">
+  Responsive text alignment
+</p>
+```
+
+### Text Transform
+
+```tsx
+<p className="uppercase">UPPERCASE TEXT</p>
+<p className="lowercase">lowercase text</p>
+<p className="capitalize">Capitalize Each Word</p>
+```
+
+### Text Decoration
+
+```tsx
+<a className="underline hover:no-underline">Hover to remove underline</a>
+<p className="line-through">Strikethrough text</p>
+```
+
+## Customizing the Font
+
+### Using a Different Google Font
+
+<CodeGroup>
+
+```tsx Roboto
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({ 
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+});
+```
+
+```tsx Poppins
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({ 
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+});
+```
+
+```tsx Open Sans
+import { Open_Sans } from "next/font/google";
+
+const openSans = Open_Sans({ 
+  subsets: ["latin"],
+});
+```
+
+</CodeGroup>
+
+### Using Custom Fonts
+
+For self-hosted fonts:
+
+```tsx src/app/layout.tsx
+import localFont from "next/font/local";
+
+const customFont = localFont({
+  src: [
+    {
+      path: "../fonts/CustomFont-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/CustomFont-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+});
+```
+
+<Tip>
+Next.js automatically optimizes custom fonts just like Google Fonts.
+</Tip>
+
+### Multiple Font Families
+
+Use different fonts for headings and body:
+
+```tsx src/app/layout.tsx
+import { Inter, Playfair_Display } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"] });
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <style jsx global>{`
+          h1, h2, h3, h4, h5, h6 {
+            font-family: ${playfair.style.fontFamily};
+          }
+        `}</style>
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+## Best Practices
+
+<Note>
+1. **Limit font weights**: Only load the weights you actually use to reduce bundle size
+2. **Use semantic text colors**: Prefer `text-body-color` over hardcoded colors
+3. **Responsive scaling**: Make typography larger on bigger screens
+4. **Readability first**: Ensure sufficient contrast and line height
+5. **Consistent hierarchy**: Use predictable font sizes for headings (h1 > h2 > h3)
+</Note>
+
+## Typography Scale Example
+
+A suggested scale for consistent typography:
+
+```tsx
+<h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white">
+  Main Heading
+</h1>
+
+<h2 className="text-3xl md:text-4xl font-semibold text-black dark:text-white">
+  Section Heading
+</h2>
+
+<h3 className="text-2xl md:text-3xl font-semibold text-black dark:text-white">
+  Subsection Heading
+</h3>
+
+<p className="text-base md:text-lg text-body-color dark:text-body-color-dark leading-relaxed">
+  Body paragraph text with comfortable reading spacing.
+</p>
+
+<small className="text-sm text-body-color dark:text-body-color-dark">
+  Small print or captions
+</small>
+```
+
+## Related
+
+- [Colors](/customization/colors) - Learn about the color system
+- [Theming](/customization/theming) - Configure dark and light modes
+- [Layout](/customization/layout) - Work with spacing and containers

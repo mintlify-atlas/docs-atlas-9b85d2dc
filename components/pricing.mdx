@@ -1,0 +1,414 @@
+---
+title: Pricing Component
+description: Display pricing plans with monthly/annual toggle and detailed feature lists
+---
+
+The Pricing component displays your pricing tiers with a toggle for monthly/annual billing, feature lists, and call-to-action buttons.
+
+## Import
+
+```tsx
+import Pricing from "@/components/Pricing";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import Pricing from "@/components/Pricing";
+
+    export default function Home() {
+      return (
+        <>
+          <Pricing />
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Full Example">
+    ```tsx src/components/Pricing/index.tsx
+    "use client";
+    import { useState } from "react";
+    import SectionTitle from "../Common/SectionTitle";
+    import PricingBox from "./PricingBox";
+    import OfferList from "./OfferList";
+
+    const Pricing = () => {
+      const [isMonthly, setIsMonthly] = useState(true);
+
+      return (
+        <section id="pricing" className="relative z-10 py-16 md:py-20 lg:py-28">
+          <SectionTitle
+            title="Precios sencillos y asequibles"
+            paragraph="Potencia tu Negocio con Planes Hechos a tu Medida."
+            center
+            width="665px"
+          />
+
+          {/* Toggle */}
+          <div className="w-full">
+            <div className="mb-8 flex justify-center md:mb-12 lg:mb-16">
+              <span onClick={() => setIsMonthly(true)}>Mensual</span>
+              {/* Toggle switch */}
+              <span onClick={() => setIsMonthly(false)}>Anual</span>
+            </div>
+          </div>
+
+          {/* Pricing boxes */}
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+            <PricingBox
+              packageName="Lite"
+              price={isMonthly ? "40" : "120"}
+              duration={isMonthly ? "mo" : "yr"}
+              subtitle="Lorem ipsum dolor sit amet..."
+            >
+              <OfferList text="All UI Components" status="active" />
+              {/* More features */}
+            </PricingBox>
+          </div>
+        </section>
+      );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  **Client Component Required** - The Pricing component uses React state, so it must have the `"use client"` directive at the top.
+</Note>
+
+## Component Structure
+
+### Main Component
+
+The Pricing component manages the monthly/annual toggle state:
+
+```tsx src/components/Pricing/index.tsx
+const [isMonthly, setIsMonthly] = useState(true);
+```
+
+### PricingBox Props
+
+From `src/components/Pricing/PricingBox.tsx`:
+
+```typescript
+type PricingBoxProps = {
+  price: string;
+  duration: string;
+  packageName: string;
+  subtitle: string;
+  children: React.ReactNode;
+};
+```
+
+<ParamField path="price" type="string" required>
+  Price amount without currency symbol (e.g., "40", "399")
+</ParamField>
+
+<ParamField path="duration" type="string" required>
+  Billing period - typically "mo" or "yr"
+</ParamField>
+
+<ParamField path="packageName" type="string" required>
+  Plan name (e.g., "Lite", "Basic", "Plus")
+</ParamField>
+
+<ParamField path="subtitle" type="string" required>
+  Brief description of the plan
+</ParamField>
+
+<ParamField path="children" type="React.ReactNode" required>
+  Feature list using OfferList components
+</ParamField>
+
+### OfferList Component
+
+Feature items within each pricing box:
+
+```tsx src/components/Pricing/OfferList.tsx
+<OfferList text="All UI Components" status="active" />
+<OfferList text="Free Lifetime Updates" status="inactive" />
+```
+
+<ParamField path="text" type="string" required>
+  Feature description text
+</ParamField>
+
+<ParamField path="status" type="'active' | 'inactive'" required>
+  Whether the feature is included - shows checkmark (active) or X (inactive)
+</ParamField>
+
+## Creating Pricing Plans
+
+<Steps>
+  <Step title="Define your tiers">
+    Decide on 2-4 pricing tiers (e.g., Starter, Professional, Enterprise)
+  </Step>
+  
+  <Step title="Set pricing">
+    Choose monthly and annual prices:
+    
+    ```tsx
+    <PricingBox
+      packageName="Professional"
+      price={isMonthly ? "99" : "999"}
+      duration={isMonthly ? "mo" : "yr"}
+      subtitle="Perfect for growing businesses"
+    >
+    ```
+  </Step>
+  
+  <Step title="Add features">
+    List features with active/inactive status:
+    
+    ```tsx
+    <OfferList text="Up to 10 team members" status="active" />
+    <OfferList text="Advanced analytics" status="active" />
+    <OfferList text="Priority support" status="active" />
+    <OfferList text="Custom integrations" status="inactive" />
+    ```
+  </Step>
+  
+  <Step title="Configure CTA button">
+    Customize the button text in PricingBox.tsx:
+    
+    ```tsx
+    <button className="...">
+      Start Free Trial
+    </button>
+    ```
+  </Step>
+</Steps>
+
+## Customization
+
+### Toggle Switch
+
+Customize billing period options:
+
+```tsx
+<span
+  onClick={() => setIsMonthly(true)}
+  className={`${
+    isMonthly
+      ? "pointer-events-none text-primary"
+      : "text-dark dark:text-white"
+  } mr-4 cursor-pointer text-base font-semibold`}
+>
+  Mensual
+</span>
+
+{/* Toggle UI */}
+
+<span
+  onClick={() => setIsMonthly(false)}
+  className={`${
+    isMonthly
+      ? "text-dark dark:text-white"
+      : "pointer-events-none text-primary"
+  } ml-4 cursor-pointer text-base font-semibold`}
+>
+  Anual
+</span>
+```
+
+### Grid Layout
+
+Change the number of pricing columns:
+
+```tsx
+// Default: 1, 2, 3 columns
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+
+// Two columns only
+className="grid grid-cols-1 md:grid-cols-2"
+
+// Four columns
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+```
+
+### Highlight Popular Plan
+
+Add visual emphasis to a recommended plan:
+
+```tsx
+<div className="relative">
+  {/* Popular badge */}
+  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+    <span className="rounded-full bg-primary px-4 py-1 text-sm text-white">
+      Most Popular
+    </span>
+  </div>
+  
+  <PricingBox
+    packageName="Professional"
+    // ... rest of props
+  />
+</div>
+```
+
+### Currency Symbol
+
+Change the currency in PricingBox.tsx:
+
+```tsx src/components/Pricing/PricingBox.tsx
+<h3 className="price mb-2 text-[32px] font-bold text-black dark:text-white">
+  $<span className="amount">{price}</span>
+  <span className="time text-lg font-medium text-body-color">
+    /{duration}
+  </span>
+</h3>
+
+// Change to Euro:
+€<span className="amount">{price}</span>
+
+// Change to Pounds:
+£<span className="amount">{price}</span>
+```
+
+### Annual Discount Badge
+
+Show savings for annual plans:
+
+```tsx
+{!isMonthly && (
+  <span className="ml-2 rounded bg-green-500 px-2 py-1 text-xs text-white">
+    Save 20%
+  </span>
+)}
+```
+
+## Default Plans
+
+The template includes three pre-configured plans:
+
+### Lite
+- Monthly: $40
+- Annual: $120
+- 4/6 features included
+
+### Basic
+- Monthly: $399
+- Annual: $789
+- 5/6 features included
+
+### Plus
+- Monthly: $589
+- Annual: $999
+- All 6 features included
+
+## Styling
+
+### Card Styles
+
+```tsx src/components/Pricing/PricingBox.tsx
+className="relative z-10 rounded-sm bg-white px-8 py-10 shadow-three hover:shadow-one dark:bg-gray-dark dark:shadow-two dark:hover:shadow-gray-dark"
+```
+
+### Button Styles
+
+```tsx
+className="flex w-full items-center justify-center rounded-sm bg-primary p-3 text-base font-semibold text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+```
+
+### Feature List Icons
+
+In OfferList.tsx:
+
+```tsx
+// Active feature (checkmark)
+className="text-primary"
+
+// Inactive feature (X mark)
+className="text-red"
+```
+
+## Background Decoration
+
+The section includes a bottom-left SVG decoration:
+
+```tsx
+<div className="absolute bottom-0 left-0 z-[-1]">
+  <svg>{/* Gradient shapes */}</svg>
+</div>
+```
+
+To remove:
+
+```tsx
+// Remove the absolute positioned div
+```
+
+## Accessibility
+
+- Section has `id="pricing"` for anchor navigation
+- Toggle is keyboard accessible with `onClick` handlers
+- Proper heading hierarchy
+- Sufficient color contrast
+- Semantic HTML structure
+
+## Best Practices
+
+<Warning>
+  **Keep feature lists aligned** - Ensure all pricing boxes have the same features listed, even if inactive, for easy comparison.
+</Warning>
+
+<Tip>
+  **Odd number of plans** - Use 3 pricing tiers (Good, Better, Best) for easier decision-making.
+</Tip>
+
+<Info>
+  **Show annual savings** - Highlight the discount percentage when users toggle to annual billing.
+</Info>
+
+<Note>
+  **Anchor pricing** - Price the middle tier to look most attractive - this is often the best seller.
+</Note>
+
+## Advanced Features
+
+### Add Custom Tiers
+
+```tsx
+<PricingBox
+  packageName="Enterprise"
+  price="Custom"
+  duration="contact us"
+  subtitle="Tailored solutions for large organizations"
+>
+  <OfferList text="Unlimited everything" status="active" />
+  <OfferList text="Dedicated account manager" status="active" />
+  <OfferList text="Custom integrations" status="active" />
+  <OfferList text="SLA guarantee" status="active" />
+</PricingBox>
+```
+
+### Contact Sales Button
+
+For enterprise plans:
+
+```tsx
+<button className="...">
+  {packageName === "Enterprise" ? "Contact Sales" : "Start Free Trial"}
+</button>
+```
+
+### FAQ Integration
+
+Add common pricing questions below the pricing grid:
+
+```tsx
+<div className="mt-20">
+  <h3 className="mb-8 text-center text-2xl font-bold">Pricing FAQ</h3>
+  {/* FAQ accordion */}
+</div>
+```
+
+## Related Components
+
+- [Features](/components/features) - Show what's included before pricing
+- [Testimonials](/components/testimonials) - Build trust before asking for commitment
+- [Contact](/components/contact) - For enterprise sales inquiries

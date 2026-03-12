@@ -1,0 +1,386 @@
+---
+title: Testimonials Component
+description: Build trust with customer testimonials featuring star ratings and client information
+---
+
+The Testimonials component displays customer reviews in a responsive grid with star ratings, customer photos, and detailed feedback.
+
+## Import
+
+```tsx
+import Testimonials from "@/components/Testimonials";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import Testimonials from "@/components/Testimonials";
+
+    export default function Home() {
+      return (
+        <>
+          <Testimonials />
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="With Data">
+    ```tsx src/components/Testimonials/index.tsx
+    const testimonialData: Testimonial[] = [
+      {
+        id: 1,
+        name: "Marcel S.",
+        designation: "Fundadora de Essenza Natural",
+        content: "Trabajar con Pengrafic fue un antes y un después...",
+        image: "/images/testimonials/auth-01.png",
+        star: 5,
+      },
+      // More testimonials...
+    ];
+
+    const Testimonials = () => {
+      return (
+        <section className="dark:bg-bg-color-dark bg-gray-light relative z-10 py-16 md:py-20 lg:py-28">
+          <SectionTitle title="..." paragraph="..." center />
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+            {testimonialData.map((testimonial) => (
+              <SingleTestimonial key={testimonial.id} testimonial={testimonial} />
+            ))}
+          </div>
+        </section>
+      );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Data Structure
+
+### Testimonial Type
+
+From `src/types/testimonial.ts`:
+
+```typescript
+export type Testimonial = {
+  id: number;
+  name: string;
+  designation: string;
+  content: string;
+  image: string;
+  star: number;
+};
+```
+
+<ParamField path="id" type="number" required>
+  Unique identifier for the testimonial (used as React key)
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Customer name (e.g., "Marcel S.", "Luis R.")
+</ParamField>
+
+<ParamField path="designation" type="string" required>
+  Customer title or company (e.g., "Fundadora de Essenza Natural")
+</ParamField>
+
+<ParamField path="content" type="string" required>
+  Full testimonial text - the customer's feedback
+</ParamField>
+
+<ParamField path="image" type="string" required>
+  Path to customer avatar/photo (recommended: 200x200px)
+</ParamField>
+
+<ParamField path="star" type="number" required>
+  Star rating from 1-5 (displays as yellow stars)
+</ParamField>
+
+## Component Props
+
+### SingleTestimonial
+
+The `SingleTestimonial` component renders individual testimonial cards:
+
+```tsx src/components/Testimonials/SingleTestimonial.tsx
+const SingleTestimonial = ({ testimonial }: { testimonial: Testimonial }) => {
+  const { star, name, image, content, designation } = testimonial;
+
+  let ratingIcons = [];
+  for (let index = 0; index < star; index++) {
+    ratingIcons.push(
+      <span key={index} className="text-yellow">
+        {starIcon}
+      </span>,
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <div className="rounded-sm bg-white p-8 shadow-two duration-300 hover:shadow-one dark:bg-dark dark:shadow-three dark:hover:shadow-gray-dark lg:px-5 xl:px-8">
+        <div className="mb-5 flex items-center space-x-1">{ratingIcons}</div>
+        <p className="mb-8 border-b border-body-color border-opacity-10 pb-8 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-10 dark:text-white">
+          "{content}
+        </p>
+        <div className="flex items-center">
+          <div className="relative mr-4 h-[50px] w-full max-w-[50px] overflow-hidden rounded-full">
+            <Image src={image} alt={name} fill />
+          </div>
+          <div className="w-full">
+            <h3 className="mb-1 text-lg font-semibold text-dark dark:text-white lg:text-base xl:text-lg">
+              {name}
+            </h3>
+            <p className="text-sm text-body-color">{designation}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+```
+
+<ParamField path="testimonial" type="Testimonial" required>
+  Testimonial object containing all customer data
+</ParamField>
+
+## Adding New Testimonials
+
+<Steps>
+  <Step title="Prepare customer photo">
+    Add the image to `/public/images/testimonials/`:
+    - Format: PNG or JPG
+    - Size: 200x200px recommended
+    - Name: `auth-04.png`, `customer-1.jpg`, etc.
+  </Step>
+  
+  <Step title="Add to testimonialData">
+    Edit `src/components/Testimonials/index.tsx`:
+    
+    ```tsx
+    const testimonialData: Testimonial[] = [
+      // Existing testimonials...
+      {
+        id: 4,
+        name: "Sarah Johnson",
+        designation: "CEO of TechStart",
+        content: "Outstanding service and results. Highly recommended!",
+        image: "/images/testimonials/auth-04.png",
+        star: 5,
+      },
+    ];
+    ```
+  </Step>
+  
+  <Step title="Test responsive layout">
+    The grid automatically adjusts:
+    - Mobile: 1 column
+    - Tablet (md): 2 columns
+    - Desktop (lg): 3 columns
+  </Step>
+</Steps>
+
+## Customization
+
+### Section Title
+
+```tsx src/components/Testimonials/index.tsx
+<SectionTitle
+  title="Testimonio de usuarios"
+  paragraph="Historias que Inspiran: Clientes Satisfechos que Alcanzaron sus Metas con Nuestra Ayuda"
+  center
+/>
+```
+
+### Grid Layout
+
+Change the number of columns:
+
+```tsx
+// Default: 1, 2, 3 columns
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+
+// Custom: 1, 1, 2 columns (for fewer testimonials)
+className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2"
+
+// Custom: 1, 2, 4 columns (for many testimonials)
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+```
+
+### Card Spacing
+
+```tsx
+// Default gaps
+className="gap-x-8 gap-y-10"
+
+// Tighter spacing
+className="gap-x-4 gap-y-6"
+
+// Wider spacing
+className="gap-x-12 gap-y-16"
+```
+
+### Star Rating Colors
+
+Customize the star color in `SingleTestimonial.tsx`:
+
+```tsx
+// Default: Yellow
+className="text-yellow"
+
+// Custom: Primary color
+className="text-primary"
+
+// Custom: Gold
+className="text-yellow-500"
+```
+
+### Half-Star Ratings
+
+To support half stars (e.g., 4.5), modify the rating logic:
+
+```tsx
+const star = 4.5;
+const fullStars = Math.floor(star);
+const hasHalfStar = star % 1 !== 0;
+
+let ratingIcons = [];
+for (let i = 0; i < fullStars; i++) {
+  ratingIcons.push(<span key={i}>{starIcon}</span>);
+}
+if (hasHalfStar) {
+  ratingIcons.push(<span key="half">{halfStarIcon}</span>);
+}
+```
+
+## Background Decorations
+
+The section includes SVG decorations:
+
+```tsx
+<div className="absolute right-0 top-5 z-[-1]">
+  {/* Right side SVG */}
+</div>
+<div className="absolute bottom-5 left-0 z-[-1]">
+  {/* Left side SVG */}
+</div>
+```
+
+To remove backgrounds:
+
+```tsx
+// Remove the absolute positioned divs
+```
+
+## Styling
+
+### Dark Mode
+
+Testimonial cards automatically adapt:
+
+```tsx
+className="bg-white dark:bg-dark"
+className="text-body-color dark:text-white"
+className="shadow-two dark:shadow-three"
+className="hover:shadow-one dark:hover:shadow-gray-dark"
+```
+
+### Background Colors
+
+The section has a light gray background:
+
+```tsx
+className="bg-gray-light dark:bg-bg-color-dark"
+```
+
+To use white background:
+
+```tsx
+className="bg-white dark:bg-gray-dark"
+```
+
+### Card Hover Effects
+
+Cards have shadow transitions on hover:
+
+```tsx
+className="shadow-two duration-300 hover:shadow-one"
+```
+
+## Accessibility
+
+- Semantic HTML with proper heading hierarchy
+- Alt text for customer photos
+- Star ratings use ARIA labels
+- Sufficient color contrast for text
+- Keyboard-navigable cards
+
+## Best Practices
+
+<Warning>
+  **Use real testimonials only** - Never fabricate customer reviews. Authenticity builds trust.
+</Warning>
+
+<Tip>
+  **Include specific details** - Generic praise is less convincing than specific outcomes and experiences.
+</Tip>
+
+<Info>
+  **Show diversity** - Include testimonials from different industries, company sizes, or use cases.
+</Info>
+
+<Note>
+  **Keep it concise** - Aim for 50-100 words per testimonial. Long reviews are less likely to be read.
+</Note>
+
+## Common Use Cases
+
+### Video Testimonials
+
+Add video support:
+
+```tsx
+type Testimonial = {
+  // ... existing fields
+  videoUrl?: string;
+};
+
+// In SingleTestimonial
+{testimonial.videoUrl && (
+  <video controls className="mb-4 w-full rounded">
+    <source src={testimonial.videoUrl} type="video/mp4" />
+  </video>
+)}
+```
+
+### Featured Testimonial
+
+Highlight one testimonial:
+
+```tsx
+<div className="mb-10">
+  <SingleTestimonial testimonial={featuredTestimonial} />
+</div>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  {otherTestimonials.map(...)}
+</div>
+```
+
+### Company Logos
+
+Add company logos to testimonials:
+
+```tsx
+type Testimonial = {
+  // ... existing fields
+  companyLogo?: string;
+};
+```
+
+## Related Components
+
+- [About](/components/about) - Build credibility before showing testimonials
+- [Pricing](/components/pricing) - Natural next step after testimonials
+- [Features](/components/features) - What customers are praising

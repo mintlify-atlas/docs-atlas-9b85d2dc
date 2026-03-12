@@ -1,0 +1,124 @@
+---
+title: Components Overview
+description: Complete collection of reusable components for the Pengrafic Next.js template
+---
+
+The Pengrafic template includes a comprehensive set of pre-built components designed to help you create a professional marketing website quickly. All components are built with Next.js 14, TypeScript, and Tailwind CSS.
+
+## Available Components
+
+<CardGroup cols={2}>
+  <Card title="Hero" icon="star" href="/components/hero">
+    Eye-catching hero section with CTA buttons and decorative SVG backgrounds
+  </Card>
+  
+  <Card title="Features" icon="grid" href="/components/features">
+    Showcase your services with icon-based feature cards in a responsive grid
+  </Card>
+  
+  <Card title="About" icon="info-circle" href="/components/about">
+    Tell your story with two-section about component including mission and vision
+  </Card>
+  
+  <Card title="Testimonials" icon="quote-right" href="/components/testimonials">
+    Build trust with customer testimonials and star ratings
+  </Card>
+  
+  <Card title="Pricing" icon="dollar-sign" href="/components/pricing">
+    Display pricing plans with monthly/annual toggle and feature lists
+  </Card>
+  
+  <Card title="Blog" icon="newspaper" href="/components/blog">
+    Showcase your latest blog posts in an attractive grid layout
+  </Card>
+  
+  <Card title="Contact" icon="envelope" href="/components/contact">
+    Contact form with newsletter subscription box
+  </Card>
+</CardGroup>
+
+## Common Features
+
+All components share these characteristics:
+
+- **Responsive Design**: Mobile-first approach with breakpoints for all screen sizes
+- **Dark Mode Support**: Built-in dark mode with `dark:` Tailwind variants
+- **TypeScript**: Fully typed with interfaces for props and data structures
+- **Accessibility**: Semantic HTML and proper ARIA attributes
+- **SEO Optimized**: Proper heading hierarchy and meta information
+
+## Getting Started
+
+Components are located in `src/components/` and can be imported directly:
+
+```tsx
+import Hero from "@/components/Hero/index1";
+import Features from "@/components/Features";
+import Testimonials from "@/components/Testimonials";
+
+export default function Page() {
+  return (
+    <>
+      <Hero />
+      <Features />
+      <Testimonials />
+    </>
+  );
+}
+```
+
+## Shared Components
+
+### SectionTitle
+
+Most sections use the `SectionTitle` component for consistent headings:
+
+```tsx
+import SectionTitle from "@/components/Common/SectionTitle";
+
+<SectionTitle
+  title="Your Title"
+  paragraph="Your description"
+  center
+  width="665px"
+  mb="100px"
+/>
+```
+
+<ParamField path="title" type="string" required>
+  The main heading text
+</ParamField>
+
+<ParamField path="paragraph" type="string" required>
+  Supporting description text below the title
+</ParamField>
+
+<ParamField path="width" type="string" default="570px">
+  Maximum width of the section title container
+</ParamField>
+
+<ParamField path="center" type="boolean" default="false">
+  Center align the title and text
+</ParamField>
+
+<ParamField path="mb" type="string" default="100px">
+  Bottom margin spacing
+</ParamField>
+
+## Styling System
+
+The template uses a consistent color system defined in Tailwind config:
+
+- `primary`: Main brand color (#4A6CF7)
+- `body-color`: Body text color
+- `body-color-dark`: Dark mode body text
+- `gray-dark`: Dark mode backgrounds
+
+## Next Steps
+
+Explore individual component documentation to learn about:
+
+- Component-specific props and configuration
+- Data structure requirements
+- Customization examples
+- Usage patterns and best practices

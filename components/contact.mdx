@@ -1,0 +1,450 @@
+---
+title: Contact Component
+description: Contact form with newsletter subscription box for customer inquiries and lead generation
+---
+
+The Contact component provides a support ticket form on the left and a newsletter subscription box on the right, creating a comprehensive contact section.
+
+## Import
+
+```tsx
+import Contact from "@/components/Contact";
+```
+
+## Usage
+
+<Tabs>
+  <Tab title="Basic Usage">
+    ```tsx src/app/page.tsx
+    import Contact from "@/components/Contact";
+
+    export default function Home() {
+      return (
+        <>
+          <Contact />
+        </>
+      );
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Full Structure">
+    ```tsx src/components/Contact/index.tsx
+    import NewsLatterBox from "./NewsLatterBox";
+
+    const Contact = () => {
+      return (
+        <section id="contact" className="overflow-hidden py-16 md:py-20 lg:py-28">
+          <div className="container">
+            <div className="-mx-4 flex flex-wrap">
+              {/* Left: Contact Form */}
+              <div className="w-full px-4 lg:w-7/12 xl:w-8/12">
+                <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
+                  <h2>¿Necesitas ayuda? Abre un ticket</h2>
+                  <p>Nuestro equipo de soporte se comunicará con usted...</p>
+                  <form>
+                    {/* Form fields */}
+                  </form>
+                </div>
+              </div>
+              
+              {/* Right: Newsletter */}
+              <div className="w-full px-4 lg:w-5/12 xl:w-4/12">
+                <NewsLatterBox />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Component Structure
+
+### Contact Form
+
+The main form includes three fields:
+
+```tsx src/components/Contact/index.tsx
+<form>
+  <div className="-mx-4 flex flex-wrap">
+    {/* Name field */}
+    <div className="w-full px-4 md:w-1/2">
+      <div className="mb-8">
+        <label htmlFor="name" className="mb-3 block text-sm font-medium text-dark dark:text-white">
+          Su nombre
+        </label>
+        <input
+          type="text"
+          placeholder="Introduce tu nombre"
+          className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+        />
+      </div>
+    </div>
+    
+    {/* Email field */}
+    <div className="w-full px-4 md:w-1/2">
+      <div className="mb-8">
+        <label htmlFor="email" className="mb-3 block text-sm font-medium text-dark dark:text-white">
+          Su correo electronico
+        </label>
+        <input
+          type="email"
+          placeholder="Introduce tu correo electronico"
+          className="..."
+        />
+      </div>
+    </div>
+    
+    {/* Message field */}
+    <div className="w-full px-4">
+      <div className="mb-8">
+        <label htmlFor="message" className="mb-3 block text-sm font-medium text-dark dark:text-white">
+          Tu mensaje
+        </label>
+        <textarea
+          name="message"
+          rows={5}
+          placeholder="Introduce tu mensaje"
+          className="..."
+        ></textarea>
+      </div>
+    </div>
+    
+    {/* Submit button */}
+    <div className="w-full px-4">
+      <button className="rounded-sm bg-primary px-9 py-4 text-base font-medium text-white shadow-submit duration-300 hover:bg-primary/90 dark:shadow-submit-dark">
+        Enviar Ticket
+      </button>
+    </div>
+  </div>
+</form>
+```
+
+### Form Fields
+
+<ParamField path="name" type="text" required>
+  Customer's full name
+</ParamField>
+
+<ParamField path="email" type="email" required>
+  Customer's email address for follow-up
+</ParamField>
+
+<ParamField path="message" type="textarea" required>
+  Detailed message or support request (5 rows)
+</ParamField>
+
+## Adding Form Functionality
+
+The template includes a static form. Here's how to add functionality:
+
+<Steps>
+  <Step title="Add state management">
+    Convert to a client component and add state:
+    
+    ```tsx src/components/Contact/index.tsx
+    "use client";
+    import { useState } from "react";
+
+    const Contact = () => {
+      const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        message: "",
+      });
+
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+    };
+    ```
+  </Step>
+  
+  <Step title="Add form submission">
+    Handle the submit event:
+    
+    ```tsx
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        
+        if (response.ok) {
+          alert('Message sent successfully!');
+          setFormData({ name: '', email: '', message: '' });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    
+    <form onSubmit={handleSubmit}>
+    ```
+  </Step>
+  
+  <Step title="Create API route">
+    Add `/app/api/contact/route.ts`:
+    
+    ```typescript
+    import { NextResponse } from 'next/server';
+
+    export async function POST(request: Request) {
+      const data = await request.json();
+      
+      // Send email, save to database, etc.
+      // Example: Use Resend, SendGrid, or Nodemailer
+      
+      return NextResponse.json({ success: true });
+    }
+    ```
+  </Step>
+  
+  <Step title="Add validation">
+    Validate inputs before submission:
+    
+    ```tsx
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+      const newErrors = {};
+      if (!formData.name) newErrors.name = 'Name is required';
+      if (!formData.email) newErrors.email = 'Email is required';
+      if (!formData.message) newErrors.message = 'Message is required';
+      return newErrors;
+    };
+    ```
+  </Step>
+</Steps>
+
+## NewsLatterBox Component
+
+The newsletter subscription box is a separate component:
+
+```tsx src/components/Contact/NewsLatterBox.tsx
+const NewsLatterBox = () => {
+  return (
+    <div className="...">
+      <h3>Subscribe to Newsletter</h3>
+      <p>Get the latest updates...</p>
+      <form>
+        <input type="email" placeholder="Your email" />
+        <button>Subscribe</button>
+      </form>
+    </div>
+  );
+};
+```
+
+## Customization
+
+### Form Title and Description
+
+```tsx src/components/Contact/index.tsx
+<h2 className="mb-3 text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl">
+  ¿Necesitas ayuda? Abre un ticket
+</h2>
+<p className="mb-12 text-base font-medium text-body-color">
+  Nuestro equipo de soporte se comunicará con usted lo antes posible por correo electrónico.
+</p>
+```
+
+### Layout Proportions
+
+Adjust the width ratio between form and newsletter:
+
+```tsx
+// Default: 7/12 and 5/12 (58% / 42%)
+<div className="w-full lg:w-7/12 xl:w-8/12"> {/* Form */}
+<div className="w-full lg:w-5/12 xl:w-4/12"> {/* Newsletter */}
+
+// Equal width: 6/12 and 6/12 (50% / 50%)
+<div className="w-full lg:w-6/12">
+<div className="w-full lg:w-6/12">
+
+// Full width form only
+<div className="w-full">
+// Remove newsletter div
+```
+
+### Add More Fields
+
+```tsx
+<div className="w-full px-4 md:w-1/2">
+  <div className="mb-8">
+    <label htmlFor="phone" className="mb-3 block text-sm font-medium text-dark dark:text-white">
+      Phone Number
+    </label>
+    <input
+      type="tel"
+      name="phone"
+      placeholder="+1 (555) 123-4567"
+      className="..."
+    />
+  </div>
+</div>
+
+<div className="w-full px-4">
+  <div className="mb-8">
+    <label htmlFor="subject" className="mb-3 block text-sm font-medium text-dark dark:text-white">
+      Subject
+    </label>
+    <select name="subject" className="...">
+      <option>Technical Support</option>
+      <option>Billing Question</option>
+      <option>Feature Request</option>
+    </select>
+  </div>
+</div>
+```
+
+### Button Styles
+
+Customize the submit button:
+
+```tsx
+// Default
+className="rounded-sm bg-primary px-9 py-4 text-base font-medium text-white shadow-submit duration-300 hover:bg-primary/90 dark:shadow-submit-dark"
+
+// Full width button
+className="w-full ..."
+
+// Different color
+className="bg-green-500 hover:bg-green-600 ..."
+```
+
+## Styling
+
+### Form Container
+
+```tsx
+className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
+```
+
+### Input Fields
+
+```tsx
+className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+```
+
+### Dark Mode
+
+All form elements automatically adapt:
+
+```tsx
+className="bg-white dark:bg-gray-dark"
+className="text-dark dark:text-white"
+className="bg-[#f8f8f8] dark:bg-[#2C303B]"
+```
+
+## Form Integration Examples
+
+### Using Formspree
+
+```tsx
+<form action="https://formspree.io/f/your-form-id" method="POST">
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <textarea name="message"></textarea>
+  <button type="submit">Send</button>
+</form>
+```
+
+### Using React Hook Form
+
+```tsx
+import { useForm } from 'react-hook-form';
+
+const { register, handleSubmit, formState: { errors } } = useForm();
+
+const onSubmit = (data) => {
+  console.log(data);
+};
+
+<form onSubmit={handleSubmit(onSubmit)}>
+  <input {...register("name", { required: true })} />
+  {errors.name && <span>This field is required</span>}
+</form>
+```
+
+### Using Web3Forms
+
+```tsx
+<form action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY" />
+  <input type="text" name="name" required />
+  <input type="email" name="email" required />
+  <textarea name="message" required></textarea>
+  <button type="submit">Submit</button>
+</form>
+```
+
+## Accessibility
+
+- Section has `id="contact"` for anchor navigation
+- All inputs have associated `<label>` elements
+- Proper `htmlFor` attributes linking labels to inputs
+- `type` attributes for semantic input types
+- `placeholder` text for guidance
+- Keyboard-navigable form fields
+
+## Best Practices
+
+<Warning>
+  **Add CSRF protection** - Implement security measures to prevent form spam and abuse.
+</Warning>
+
+<Tip>
+  **Show success message** - Always provide feedback after form submission.
+</Tip>
+
+<Info>
+  **Required field indicators** - Mark required fields with asterisks (*) or "Required" labels.
+</Info>
+
+<Note>
+  **Mobile-friendly inputs** - Use appropriate input types (`tel`, `email`) for better mobile keyboards.
+</Note>
+
+## Error Handling
+
+Display validation errors:
+
+```tsx
+{errors.email && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.email}
+  </p>
+)}
+```
+
+Show submission status:
+
+```tsx
+const [status, setStatus] = useState('');
+
+{status === 'success' && (
+  <div className="rounded bg-green-100 p-4 text-green-700">
+    Message sent successfully!
+  </div>
+)}
+
+{status === 'error' && (
+  <div className="rounded bg-red-100 p-4 text-red-700">
+    Failed to send message. Please try again.
+  </div>
+)}
+```
+
+## Related Components
+
+- [Hero](/components/hero) - CTA buttons often link to contact
+- [Pricing](/components/pricing) - Enterprise plans link to contact sales
+- [Blog](/components/blog) - Newsletter signup complements blog content

@@ -1,0 +1,468 @@
+---
+title: Responsive Design
+description: Learn about the responsive design system in the Pengrafic Next.js template using Tailwind CSS breakpoints
+---
+
+## Overview
+
+The Pengrafic template is built with a mobile-first responsive design approach using Tailwind CSS. All components automatically adapt to different screen sizes using Tailwind's responsive modifiers.
+
+## Breakpoints
+
+The template uses custom breakpoints defined in `tailwind.config.js`:
+
+```js tailwind.config.js
+module.exports = {
+  theme: {
+    screens: {
+      xs: "450px",
+      // => @media (min-width: 450px) { ... }
+
+      sm: "575px",
+      // => @media (min-width: 575px) { ... }
+
+      md: "768px",
+      // => @media (min-width: 768px) { ... }
+
+      lg: "992px",
+      // => @media (min-width: 992px) { ... }
+
+      xl: "1200px",
+      // => @media (min-width: 1200px) { ... }
+
+      "2xl": "1400px",
+      // => @media (min-width: 1400px) { ... }
+    },
+  },
+};
+```
+
+### Breakpoint Reference
+
+| Breakpoint | Min Width | Typical Devices |
+|------------|-----------|----------------|
+| `xs` | 450px | Large phones (landscape) |
+| `sm` | 575px | Small tablets |
+| `md` | 768px | Tablets |
+| `lg` | 992px | Small laptops |
+| `xl` | 1200px | Desktops |
+| `2xl` | 1400px | Large desktops |
+
+## Mobile-First Approach
+
+The template follows a mobile-first design philosophy. This means:
+
+1. Base styles apply to mobile devices
+2. Responsive modifiers add styles for larger screens
+3. Use `sm:`, `md:`, `lg:`, `xl:`, and `2xl:` prefixes to override styles at breakpoints
+
+### Example Pattern
+
+```tsx
+<div className="text-3xl md:text-5xl xl:text-6xl">
+  {/* Mobile: text-3xl, Tablet: text-5xl, Desktop: text-6xl */}
+</div>
+```
+
+## Real-World Examples
+
+### Hero Section
+
+From `src/components/Hero/index1.tsx`:
+
+```tsx
+<section
+  id="home"
+  className="relative z-10 overflow-hidden bg-white pb-16 pt-[120px] dark:bg-gray-dark md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
+>
+  <div className="container">
+    <div className="-mx-4 flex flex-wrap">
+      <div className="w-full px-4">
+        <div className="mx-auto max-w-[800px] text-center">
+          <h1 className="mb-5 text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-5xl leading-tight">
+            Potencia tu negocio con un eCommerce
+          </h1>
+          <p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
+            Atrae más clientes, aumenta tus ventas
+          </p>
+          <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+            <Link
+              href="tel:51992870423"
+              className="rounded-sm bg-primary px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
+            >
+              🔥 Llamanos
+            </Link>
+            <Link
+              href="https://github.com/djvamps"
+              className="inline-block rounded-sm bg-black px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
+            >
+              Escribenos
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Responsive features:**
+- **Padding:** `pb-16 pt-[120px]` on mobile, increases to `pb-[200px] pt-[210px]` on 2xl screens
+- **Typography:** `text-3xl` on mobile, `text-4xl` on sm, `text-5xl` on md
+- **Layout:** Buttons stack vertically (`flex-col`) on mobile, horizontal (`sm:flex-row`) on small screens
+- **Spacing:** Vertical spacing (`space-y-4`) on mobile, horizontal (`sm:space-x-4`) on larger screens
+
+### Header Navigation
+
+From `src/components/Header/index.tsx`:
+
+```tsx
+<header
+  className={`header left-0 top-0 z-40 flex w-full items-center ${
+    sticky
+      ? "dark:bg-gray-dark dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition"
+      : "absolute bg-transparent"
+  }`}
+>
+  <div className="container">
+    <div className="relative -mx-4 flex items-center justify-between">
+      <div className="w-60 max-w-full px-4 xl:mr-12">
+        <Link
+          href="/"
+          className={`header-logo block w-full ${
+            sticky ? "py-5 lg:py-2" : "py-8"
+          }`}
+        >
+          <Image
+            src="/images/logo/logo-2.svg"
+            alt="logo"
+            width={140}
+            height={30}
+            className="w-full dark:hidden"
+          />
+        </Link>
+      </div>
+      <div className="flex w-full items-center justify-between px-4">
+        <div>
+          {/* Mobile menu toggle button */}
+          <button
+            onClick={navbarToggleHandler}
+            id="navbarToggler"
+            aria-label="Mobile Menu"
+            className="absolute right-4 top-1/2 block translate-y-[-50%] rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden"
+          >
+            {/* Hamburger icon */}
+          </button>
+          
+          {/* Navigation menu */}
+          <nav
+            id="navbarCollapse"
+            className={`navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 ${
+              navbarOpen
+                ? "visibility top-full opacity-100"
+                : "invisible top-[120%] opacity-0"
+            }`}
+          >
+            <ul className="block lg:flex lg:space-x-12">
+              {/* Menu items */}
+            </ul>
+          </nav>
+        </div>
+        <div className="flex items-center justify-end pr-16 lg:pr-0">
+          <Link
+            href="/signin"
+            className="hidden px-7 py-3 text-base font-medium text-dark hover:opacity-70 dark:text-white md:block"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/signup"
+            className="ease-in-up shadow-btn hover:shadow-btn-hover hidden rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-9 lg:px-6 xl:px-9"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+```
+
+**Responsive features:**
+- **Mobile menu:** Hamburger button visible on mobile (`lg:hidden`), hidden on large screens
+- **Navigation:** Dropdown menu on mobile, horizontal navigation on desktop (`lg:flex`)
+- **Auth buttons:** Hidden on mobile (`hidden md:block`), visible from medium screens up
+- **Logo padding:** Dynamic padding based on sticky state and screen size
+
+### Theme Toggler Button
+
+From `src/components/Header/ThemeToggler.tsx`:
+
+```tsx
+<button 
+  aria-label='theme toggler'
+  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+  className="flex items-center justify-center text-black rounded-full cursor-pointer bg-gray-2 dark:bg-dark-bg h-9 w-9 dark:text-white md:h-14 md:w-14"
+>
+  <svg
+    viewBox="0 0 23 23"
+    className="w-5 h-5 stroke-current dark:hidden md:h-6 md:w-6"
+    fill="none"
+  >
+    {/* Icon path */}
+  </svg>
+</button>
+```
+
+**Responsive features:**
+- **Button size:** `h-9 w-9` on mobile, `md:h-14 md:w-14` on tablets and up
+- **Icon size:** `w-5 h-5` on mobile, `md:h-6 md:w-6` on tablets and up
+
+### Form Inputs
+
+From `src/app/signin/page.tsx`:
+
+```tsx
+<section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
+  <div className="container">
+    <div className="-mx-4 flex flex-wrap">
+      <div className="w-full px-4">
+        <div className="shadow-three mx-auto max-w-[500px] rounded bg-white px-6 py-10 dark:bg-dark sm:p-[60px]">
+          <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
+            Sign in to your account
+          </h3>
+          <form>
+            <div className="mb-8">
+              <label
+                htmlFor="email"
+                className="mb-3 block text-sm text-dark dark:text-white"
+              >
+                Your Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your Email"
+                className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Responsive features:**
+- **Section padding:** `pb-16 pt-36` on mobile, `lg:pb-28 lg:pt-[180px]` on large screens
+- **Card padding:** `px-6 py-10` on mobile, `sm:p-[60px]` on small screens and up
+- **Typography:** `text-2xl` on mobile, `sm:text-3xl` on small screens and up
+
+## Common Responsive Patterns
+
+### Stacking to Horizontal Layout
+
+```tsx
+{/* Stack vertically on mobile, horizontal on larger screens */}
+<div className="flex flex-col md:flex-row gap-4">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
+
+### Responsive Grid
+
+```tsx
+{/* 1 column on mobile, 2 on tablet, 3 on desktop */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div>Card 1</div>
+  <div>Card 2</div>
+  <div>Card 3</div>
+</div>
+```
+
+### Hide/Show Elements
+
+```tsx
+{/* Hidden on mobile, visible on desktop */}
+<div className="hidden lg:block">
+  Desktop only content
+</div>
+
+{/* Visible on mobile, hidden on desktop */}
+<div className="block lg:hidden">
+  Mobile only content
+</div>
+```
+
+### Responsive Text Sizes
+
+```tsx
+<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+  Responsive Heading
+</h1>
+
+<p className="text-sm sm:text-base md:text-lg">
+  Responsive paragraph text
+</p>
+```
+
+### Responsive Spacing
+
+```tsx
+{/* Padding increases with screen size */}
+<div className="p-4 md:p-6 lg:p-8 xl:p-12">
+  Content
+</div>
+
+{/* Margin increases with screen size */}
+<div className="mb-4 md:mb-6 lg:mb-8">
+  Content
+</div>
+```
+
+### Responsive Container
+
+The template uses a custom container configuration:
+
+```js tailwind.config.js
+module.exports = {
+  theme: {
+    container: {
+      center: true,
+      padding: "1rem",
+    },
+  },
+};
+```
+
+Usage:
+
+```tsx
+<div className="container">
+  {/* Content is centered and has 1rem padding */}
+</div>
+```
+
+## Responsive Images
+
+### Using Next.js Image Component
+
+```tsx
+import Image from "next/image";
+
+<Image
+  src="/images/hero.jpg"
+  alt="Hero image"
+  width={1200}
+  height={600}
+  className="w-full h-auto"
+  priority
+/>
+```
+
+### Responsive Background Images
+
+```tsx
+<div className="bg-cover bg-center h-64 md:h-96 lg:h-[500px]" 
+     style={{ backgroundImage: 'url(/images/hero.jpg)' }}>
+  Content
+</div>
+```
+
+## Testing Responsive Design
+
+### Browser DevTools
+
+1. Open Chrome/Firefox DevTools (F12)
+2. Click the device toolbar icon (Ctrl+Shift+M)
+3. Test different device presets:
+   - iPhone SE (375px)
+   - iPad (768px)
+   - iPad Pro (1024px)
+   - Desktop (1920px)
+
+### Responsive Design Mode Shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Toggle device toolbar | Ctrl+Shift+M (Windows/Linux)<br/>Cmd+Shift+M (Mac) |
+| Rotate device | Ctrl+Shift+R (Windows/Linux)<br/>Cmd+Shift+R (Mac) |
+
+## Best Practices
+
+<Steps>
+
+### Start Mobile-First
+
+Always design for mobile first, then add styles for larger screens:
+
+```tsx
+{/* Good */}
+<div className="text-base md:text-lg lg:text-xl">
+  Mobile first approach
+</div>
+
+{/* Avoid */}
+<div className="text-xl lg:text-base">
+  Desktop first (harder to maintain)
+</div>
+```
+
+### Use Consistent Breakpoints
+
+Stick to the defined breakpoints in `tailwind.config.js`. Don't create arbitrary breakpoints.
+
+### Test on Real Devices
+
+While DevTools are helpful, always test on actual devices when possible:
+- Test touch interactions on mobile
+- Verify font sizes are readable
+- Check layout doesn't break on edge cases
+
+### Optimize Images
+
+Use Next.js Image component for automatic optimization:
+- Lazy loading
+- Responsive images
+- WebP format
+- Proper sizing
+
+### Consider Touch Targets
+
+On mobile, ensure buttons and links are at least 44x44px for comfortable tapping:
+
+```tsx
+<button className="min-h-[44px] min-w-[44px] px-4 py-2">
+  Tap-friendly button
+</button>
+```
+
+</Steps>
+
+<Warning>
+  Always test your responsive design on multiple devices and screen sizes. What looks good on your development monitor might not work well on a mobile device.
+</Warning>
+
+## Container Queries (Advanced)
+
+For component-based responsive design, consider using container queries:
+
+```tsx
+{/* Install @tailwindcss/container-queries first */}
+<div className="@container">
+  <div className="@lg:flex @lg:flex-row">
+    {/* Responds to container size, not viewport */}
+  </div>
+</div>
+```
+
+## Accessibility Considerations
+
+- Ensure text is readable at all screen sizes (minimum 16px base)
+- Maintain proper contrast ratios
+- Don't hide important content on mobile
+- Test keyboard navigation on all breakpoints
+- Use semantic HTML elements

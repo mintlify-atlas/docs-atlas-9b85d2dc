@@ -1,0 +1,383 @@
+---
+title: 'Layout'
+description: 'Configure containers, grids, spacing, and responsive breakpoints'
+---
+
+## Overview
+
+Pengrafic provides a comprehensive layout system built on Tailwind CSS, featuring custom breakpoints, container utilities, and spacing configurations for building responsive interfaces.
+
+## Container Configuration
+
+The container utility is pre-configured with centered alignment and responsive padding:
+
+```js tailwind.config.js
+container: {
+  center: true,
+  padding: "1rem",
+}
+```
+
+### Using Containers
+
+```tsx
+<div className="container">
+  {/* Content is automatically centered with 1rem padding */}
+</div>
+```
+
+The container will:
+- Automatically center horizontally
+- Apply 1rem (16px) padding on all sides
+- Adapt its max-width to the current breakpoint
+
+<Tip>
+Use the container class for page sections that need consistent width constraints and centering.
+</Tip>
+
+## Responsive Breakpoints
+
+Pengrafic uses custom breakpoints optimized for modern web design:
+
+```js tailwind.config.js
+screens: {
+  xs: "450px",   // Extra small devices
+  sm: "575px",   // Small devices (phones)
+  md: "768px",   // Medium devices (tablets)
+  lg: "992px",   // Large devices (desktops)
+  xl: "1200px",  // Extra large devices
+  "2xl": "1400px", // 2X large devices
+}
+```
+
+### Breakpoint Reference
+
+| Breakpoint | Min Width | Typical Devices |
+|------------|-----------|----------------|
+| `xs` | 450px | Large phones, small tablets |
+| `sm` | 575px | Phones in landscape, small tablets |
+| `md` | 768px | Tablets, small laptops |
+| `lg` | 992px | Desktops, laptops |
+| `xl` | 1200px | Large desktops |
+| `2xl` | 1400px | Extra large screens |
+
+### Using Breakpoints
+
+<CodeGroup>
+
+```tsx Responsive Padding
+<div className="p-4 md:p-6 lg:p-8 xl:p-12">
+  Padding increases on larger screens
+</div>
+```
+
+```tsx Responsive Layout
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  {/* Responsive grid columns */}
+</div>
+```
+
+```tsx Responsive Display
+<div className="hidden md:block">
+  Only visible on medium screens and up
+</div>
+
+<div className="block md:hidden">
+  Only visible on small screens
+</div>
+```
+
+</CodeGroup>
+
+## Grid System
+
+Create responsive grid layouts using Tailwind's grid utilities:
+
+### Basic Grid
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div>Column 1</div>
+  <div>Column 2</div>
+  <div>Column 3</div>
+</div>
+```
+
+### Card Grid Example
+
+```tsx
+<div className="container">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark">
+      Card 1
+    </div>
+    <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark">
+      Card 2
+    </div>
+    <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark">
+      Card 3
+    </div>
+  </div>
+</div>
+```
+
+### Auto-Fit Grid
+
+```tsx
+<div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
+  {/* Automatically fits as many columns as possible */}
+</div>
+```
+
+## Flexbox Layouts
+
+Flexbox is perfect for component-level layouts:
+
+### Horizontal Layout
+
+```tsx
+<div className="flex items-center gap-4">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
+
+### Responsive Flex Direction
+
+```tsx
+<div className="flex flex-col md:flex-row gap-6">
+  <div className="flex-1">Left content</div>
+  <div className="flex-1">Right content</div>
+</div>
+```
+
+### Center Alignment
+
+```tsx
+<div className="flex h-screen items-center justify-center">
+  <div>Centered content</div>
+</div>
+```
+
+## Spacing System
+
+Tailwind's default spacing scale is available (0.25rem increments):
+
+### Padding
+
+```tsx
+<div className="p-4">        {/* 1rem all sides */}
+<div className="px-6">       {/* 1.5rem horizontal */}
+<div className="py-8">       {/* 2rem vertical */}
+<div className="pt-12">      {/* 3rem top */}
+<div className="pb-4">       {/* 1rem bottom */}
+```
+
+### Margin
+
+```tsx
+<div className="m-4">        {/* 1rem all sides */}
+<div className="mx-auto">    {/* Auto horizontal (centering) */}
+<div className="my-8">       {/* 2rem vertical */}
+<div className="mt-12">      {/* 3rem top */}
+<div className="-mb-4">      {/* -1rem bottom (negative) */}
+```
+
+### Gap
+
+```tsx
+<div className="flex gap-4">       {/* 1rem gap */}
+<div className="grid gap-6">       {/* 1.5rem gap */}
+<div className="flex gap-x-4 gap-y-8"> {/* Different horizontal/vertical */}
+```
+
+<Note>
+Spacing values: 1 = 0.25rem (4px), 2 = 0.5rem (8px), 4 = 1rem (16px), 6 = 1.5rem (24px), 8 = 2rem (32px), etc.
+</Note>
+
+## Common Layout Patterns
+
+### Page Section
+
+```tsx
+<section className="py-16 md:py-20 lg:py-24">
+  <div className="container">
+    <div className="mx-auto max-w-4xl">
+      {/* Section content */}
+    </div>
+  </div>
+</section>
+```
+
+### Two Column Layout
+
+```tsx
+<div className="container">
+  <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+    <div className="lg:col-span-8">
+      {/* Main content */}
+    </div>
+    <div className="lg:col-span-4">
+      {/* Sidebar */}
+    </div>
+  </div>
+</div>
+```
+
+### Hero Section
+
+```tsx
+<section className="relative overflow-hidden py-20 md:py-32 lg:py-40">
+  <div className="container">
+    <div className="mx-auto max-w-3xl text-center">
+      <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">
+        Hero Heading
+      </h1>
+      <p className="mb-8 text-lg text-body-color dark:text-body-color-dark">
+        Hero description text
+      </p>
+    </div>
+  </div>
+</section>
+```
+
+### Card Grid Section
+
+```tsx
+<section className="py-16 md:py-20">
+  <div className="container">
+    <div className="mb-12 text-center">
+      <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+        Section Title
+      </h2>
+    </div>
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Cards */}
+    </div>
+  </div>
+</section>
+```
+
+## Aspect Ratios
+
+Maintain consistent aspect ratios for images and videos:
+
+```tsx
+<div className="aspect-video">
+  {/* 16:9 aspect ratio */}
+</div>
+
+<div className="aspect-square">
+  {/* 1:1 aspect ratio */}
+</div>
+
+<div className="aspect-[4/3]">
+  {/* Custom 4:3 aspect ratio */}
+</div>
+```
+
+## Max Width Utilities
+
+Constrain content width for better readability:
+
+```tsx
+<div className="mx-auto max-w-screen-xs">   {/* 450px */}
+<div className="mx-auto max-w-screen-sm">   {/* 575px */}
+<div className="mx-auto max-w-screen-md">   {/* 768px */}
+<div className="mx-auto max-w-screen-lg">   {/* 992px */}
+<div className="mx-auto max-w-screen-xl">   {/* 1200px */}
+<div className="mx-auto max-w-screen-2xl">  {/* 1400px */}
+```
+
+### Content Max Widths
+
+```tsx
+<div className="mx-auto max-w-2xl">   {/* 672px - Good for blog posts */}
+<div className="mx-auto max-w-4xl">   {/* 896px - Good for articles */}
+<div className="mx-auto max-w-6xl">   {/* 1152px - Good for dashboards */}
+```
+
+## Z-Index Layering
+
+Manage stacking order:
+
+```tsx
+<div className="relative z-10">     {/* Above default */}
+<div className="relative z-20">     {/* Above z-10 */}
+<div className="relative z-30">     {/* Above z-20 */}
+<div className="relative z-40">     {/* Above z-30 */}
+<div className="relative z-50">     {/* Above z-40 */}
+```
+
+<Tip>
+Use z-index sparingly and establish a consistent layering system across your app.
+</Tip>
+
+## Overflow Handling
+
+```tsx
+<div className="overflow-hidden">      {/* Hide overflow */}
+<div className="overflow-auto">        {/* Show scrollbars when needed */}
+<div className="overflow-x-auto">      {/* Horizontal scroll only */}
+<div className="overflow-y-auto">      {/* Vertical scroll only */}
+```
+
+## Position Utilities
+
+```tsx
+<div className="relative">             {/* Relative positioning */}
+<div className="absolute top-0 left-0"> {/* Absolute positioning */}
+<div className="fixed bottom-4 right-4"> {/* Fixed positioning */}
+<div className="sticky top-0">          {/* Sticky positioning */}
+```
+
+## Best Practices
+
+<Note>
+1. **Mobile-first approach**: Start with mobile styles, then add breakpoint variants
+2. **Use container consistently**: Wrap page sections in containers for consistent width
+3. **Semantic spacing**: Use the spacing scale consistently (multiples of 4)
+4. **Breakpoint consistency**: Stick to the defined breakpoints
+5. **Grid over float**: Prefer CSS Grid and Flexbox over legacy layout methods
+6. **Test all breakpoints**: Verify layouts work from 320px to 1920px+
+</Note>
+
+## Responsive Design Example
+
+Complete responsive component:
+
+```tsx
+<section className="py-12 md:py-16 lg:py-20">
+  <div className="container">
+    {/* Header */}
+    <div className="mb-8 text-center md:mb-12 lg:mb-16">
+      <h2 className="mb-4 text-3xl font-bold md:text-4xl lg:text-5xl">
+        Responsive Section
+      </h2>
+      <p className="mx-auto max-w-2xl text-base text-body-color dark:text-body-color-dark md:text-lg">
+        This section adapts beautifully to all screen sizes.
+      </p>
+    </div>
+    
+    {/* Content Grid */}
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+      <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark md:p-8">
+        Card 1
+      </div>
+      <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark md:p-8">
+        Card 2
+      </div>
+      <div className="rounded-lg bg-white p-6 shadow-two dark:bg-dark md:p-8">
+        Card 3
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+## Related
+
+- [Colors](/customization/colors) - Learn about the color system
+- [Typography](/customization/typography) - Configure fonts and text styles
+- [Theming](/customization/theming) - Configure dark and light modes

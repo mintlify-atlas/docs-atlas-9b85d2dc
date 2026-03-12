@@ -1,80 +1,511 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get from zero to a working page in minutes with Pengrafic. Learn to customize the home page and create your first component.
 ---
 
-## Get started in three steps
+This guide will help you understand the template structure and make your first customizations. By the end, you'll know how to modify existing pages and create new components.
 
-Get your documentation site running locally and make your first customization.
+<Note>
+Make sure you've completed the [installation](/installation) before proceeding.
+</Note>
 
-### Step 1: Set up your local environment
+## Understanding the Home Page
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+The home page (`src/app/page.tsx`) is your starting point. Let's explore how it's structured:
 
-### Step 2: Deploy your changes
+```tsx src/app/page.tsx
+import AboutSectionOne from "@/components/About/AboutSectionOne";
+import AboutSectionTwo from "@/components/About/AboutSectionTwo";
+import Blog from "@/components/Blog";
+import Brands from "@/components/Brands";
+import ScrollUp from "@/components/Common/ScrollUp";
+import Contact from "@/components/Contact";
+import Features from "@/components/Features";
+import Hero from "@/components/Hero/index1";
+import Pricing from "@/components/Pricing";
+import Testimonials from "@/components/Testimonials";
+import Video from "@/components/Video";
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+export default function Home() {
+  return (
+    <>
+      <ScrollUp />
+      <Hero />
+      <Features />
+      <Video />
+      <Brands />
+      <AboutSectionOne />
+      <AboutSectionTwo />
+      <Testimonials />
+      <Pricing />
+      <Blog />
+      <Contact />
+    </>
+  );
+}
+```
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+Each component represents a section on your landing page. You can reorder, remove, or add sections by simply rearranging these imports.
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+## Quick Customizations
 
-### Step 3: Go live
+<Steps>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+<Step title="Customize the Hero Section">
 
-## Next steps
+The Hero section is the first thing visitors see. Let's modify it:
 
-Now that you have your docs running, explore these key features:
+**Original Hero component** (`src/components/Hero/index1.tsx:14-19`):
+
+```tsx src/components/Hero/index1.tsx
+<h1 className="mb-5 text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-5xl leading-tight">
+  Potencia tu negocio con un eCommerce o Landing Page diseñados para vender
+</h1>
+<p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
+  Atrae más clientes, aumenta tus ventas y optimiza cada clic con una plataforma hecha a tu medida. ¡Convierte visitantes en ventas hoy mismo!
+</p>
+```
+
+**Customize it for your business:**
+
+```tsx src/components/Hero/index1.tsx
+<h1 className="mb-5 text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-5xl leading-tight">
+  Build Your SaaS Product Faster
+</h1>
+<p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
+  Launch your startup with a production-ready Next.js template. 
+  Save months of development time and focus on what matters.
+</p>
+```
+
+<Tip>
+The Hero section uses responsive Tailwind classes. The heading automatically adjusts from `text-3xl` on mobile to `text-5xl` on desktop.
+</Tip>
+
+</Step>
+
+<Step title="Modify Features Section">
+
+The Features section showcases your services. Edit the content in `src/components/Features/featuresData.tsx`:
+
+**Original feature data** (`src/components/Features/featuresData.tsx:15-18`):
+
+```tsx src/components/Features/featuresData.tsx
+{
+  id: 1,
+  icon: (
+    <svg width="40" height="41" viewBox="0 0 40 41" className="fill-current">
+      {/* SVG paths */}
+    </svg>
+  ),
+  title: "Desarrollo Web",
+  paragraph: "Desarrollaremos la página web que necesita tu empresa...",
+}
+```
+
+**Customize with your own features:**
+
+```tsx src/components/Features/featuresData.tsx
+{
+  id: 1,
+  icon: (
+    <svg width="40" height="41" viewBox="0 0 40 41" className="fill-current">
+      {/* Keep existing SVG or replace with your icon */}
+    </svg>
+  ),
+  title: "Lightning Fast",
+  paragraph: "Built on Next.js 14 with App Router for maximum performance and SEO optimization.",
+}
+```
+
+The features automatically render in a responsive grid (`src/components/Features/index.tsx:16-20`):
+
+```tsx src/components/Features/index.tsx
+<div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+  {featuresData.map((feature) => (
+    <SingleFeature key={feature.id} feature={feature} />
+  ))}
+</div>
+```
+
+</Step>
+
+<Step title="Update Site Metadata">
+
+Change your site's title, description, and SEO metadata in `src/app/layout.tsx`:
+
+**Original metadata** (`src/app/layout.tsx:13-23`):
+
+```tsx src/app/layout.tsx
+export const metadata: Metadata = {
+  title: 'Pengrafic: Agencia de Marketing Digital y Desarrollo Web',
+  description: 'Tu descripción del sitio web de Pengrafic...',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/pen2025.png',
+  },
+  verification: {
+    google: 'xIiLIUqqWxzZ6XSXF7YQ-GKiOKmlUnUdIrTsd3fnceg',
+  },
+};
+```
+
+**Customize for your brand:**
+
+```tsx src/app/layout.tsx
+export const metadata: Metadata = {
+  title: 'YourStartup - SaaS Template for Next.js',
+  description: 'Modern, fast, and SEO-optimized SaaS landing page template built with Next.js 14 and Tailwind CSS.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/logo.png',
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+};
+```
+
+</Step>
+
+<Step title="Reorder or Remove Sections">
+
+Simply rearrange components in `src/app/page.tsx` to change section order:
+
+**Before:**
+```tsx
+export default function Home() {
+  return (
+    <>
+      <ScrollUp />
+      <Hero />
+      <Features />
+      <Video />
+      <Brands />
+    </>
+  );
+}
+```
+
+**After (Features before Hero):**
+```tsx
+export default function Home() {
+  return (
+    <>
+      <ScrollUp />
+      <Features />
+      <Hero />
+      <Video />
+    </>
+  );
+}
+```
+
+**Remove sections you don't need:**
+```tsx
+export default function Home() {
+  return (
+    <>
+      <ScrollUp />
+      <Hero />
+      <Features />
+      {/* Video, Brands, and other sections removed */}
+      <Contact />
+    </>
+  );
+}
+```
+
+</Step>
+
+</Steps>
+
+## Creating a Custom Component
+
+Let's build a new "Stats" component from scratch to display key metrics.
+
+<Steps>
+
+<Step title="Create the Component File">
+
+Create a new file: `src/components/Stats/index.tsx`
+
+```tsx src/components/Stats/index.tsx
+const Stats = () => {
+  const stats = [
+    { number: "10K+", label: "Active Users" },
+    { number: "99.9%", label: "Uptime" },
+    { number: "24/7", label: "Support" },
+    { number: "50+", label: "Countries" },
+  ];
+
+  return (
+    <section className="bg-primary/5 py-16 md:py-20 lg:py-28">
+      <div className="container">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center">
+              <h3 className="mb-2 text-4xl font-bold text-black dark:text-white md:text-5xl">
+                {stat.number}
+              </h3>
+              <p className="text-base text-body-color dark:text-body-color-dark">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Stats;
+```
+
+<Tip>
+This component follows the same pattern as existing components like Features and uses the template's design system classes.
+</Tip>
+
+</Step>
+
+<Step title="Add to Home Page">
+
+Import and use your new component in `src/app/page.tsx`:
+
+```tsx src/app/page.tsx
+import Hero from "@/components/Hero/index1";
+import Features from "@/components/Features";
+import Stats from "@/components/Stats"; // Add this import
+
+export default function Home() {
+  return (
+    <>
+      <ScrollUp />
+      <Hero />
+      <Features />
+      <Stats /> {/* Add your new component */}
+      <Contact />
+    </>
+  );
+}
+```
+
+</Step>
+
+<Step title="View Your Changes">
+
+Save the files and check `localhost:3000`. Your new Stats section should appear between Features and Contact!
+
+</Step>
+
+</Steps>
+
+## Using Existing Components
+
+The template includes ready-to-use components. Here's how the `SectionTitle` component works:
+
+```tsx src/components/Common/SectionTitle.tsx
+const SectionTitle = ({
+  title,
+  paragraph,
+  width = "570px",
+  center,
+  mb = "100px",
+}: {
+  title: string;
+  paragraph: string;
+  width?: string;
+  center?: boolean;
+  mb?: string;
+}) => {
+  return (
+    <div
+      className={`w-full ${center ? "mx-auto text-center" : ""}`}
+      style={{ maxWidth: width, marginBottom: mb }}
+    >
+      <h2 className="mb-4 text-3xl font-bold !leading-tight text-black dark:text-white sm:text-4xl md:text-[45px]">
+        {title}
+      </h2>
+      <p className="text-base !leading-relaxed text-body-color md:text-lg">
+        {paragraph}
+      </p>
+    </div>
+  );
+};
+```
+
+**Use it in your components:**
+
+```tsx
+import SectionTitle from "@/components/Common/SectionTitle";
+
+const MySection = () => {
+  return (
+    <section>
+      <div className="container">
+        <SectionTitle
+          title="Our Services"
+          paragraph="Discover what makes us different from the competition."
+          center
+        />
+        {/* Your content */}
+      </div>
+    </section>
+  );
+};
+```
+
+## Dark Mode Support
+
+Dark mode is built-in using `next-themes`. All components automatically support dark mode with `dark:` prefixed Tailwind classes:
+
+```tsx
+<h1 className="text-black dark:text-white">
+  This text is black in light mode, white in dark mode
+</h1>
+
+<div className="bg-white dark:bg-gray-dark">
+  Background adapts to theme
+</div>
+```
+
+<Note>
+Users can toggle dark mode using the theme switcher in the header. Their preference is saved to localStorage.
+</Note>
+
+## TypeScript Types
+
+The template uses TypeScript for type safety. When creating new features, define types in `src/types/`:
+
+```typescript src/types/feature.ts
+export type Feature = {
+  id: number;
+  icon: JSX.Element;
+  title: string;
+  paragraph: string;
+};
+```
+
+Then use them in your components for autocomplete and type checking:
+
+```tsx
+import { Feature } from "@/types/feature";
+
+const SingleFeature = ({ feature }: { feature: Feature }) => {
+  const { icon, title, paragraph } = feature;
+  // TypeScript knows these properties exist!
+};
+```
+
+## Path Aliases
+
+The template uses `@/*` as a path alias configured in `tsconfig.json`. This means:
+
+```tsx
+// ✅ Clean imports
+import Hero from "@/components/Hero";
+import { supabase } from "@/lib/supabaseClient";
+
+// ❌ Avoid relative paths
+import Hero from "../../../components/Hero";
+```
+
+## Next Steps
 
 <CardGroup cols={2}>
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
+<Card title="Components Reference" icon="puzzle-piece" href="/components">
+  Explore all available components and their props
 </Card>
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
+<Card title="Styling Guide" icon="paintbrush" href="/styling">
+  Learn about Tailwind CSS customization and theming
 </Card>
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
+<Card title="Adding Pages" icon="file" href="/pages">
+  Create new pages using Next.js App Router
 </Card>
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
+<Card title="Deployment" icon="rocket" href="/deployment">
+  Deploy your customized site to production
 </Card>
 
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Common Tasks
+
+<AccordionGroup>
+
+<Accordion title="How do I change the primary color?">
+
+Edit `tailwind.config.js` and modify the `primary` color value:
+
+```js tailwind.config.js
+theme: {
+  extend: {
+    colors: {
+      primary: "#4A6CF7", // Change this hex value
+    },
+  },
+},
+```
+
+</Accordion>
+
+<Accordion title="How do I add a new page?">
+
+Create a new folder in `src/app/` with a `page.tsx` file:
+
+```tsx src/app/services/page.tsx
+export default function Services() {
+  return (
+    <div>
+      <h1>Our Services</h1>
+      {/* Your content */}
+    </div>
+  );
+}
+```
+
+The page will be automatically available at `/services`.
+
+</Accordion>
+
+<Accordion title="How do I change fonts?">
+
+The template uses Inter font from Google Fonts. Change it in `src/app/layout.tsx`:
+
+```tsx src/app/layout.tsx
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({ 
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+```
+
+</Accordion>
+
+<Accordion title="How do I add animations?">
+
+The template includes Framer Motion. Import and use it:
+
+```tsx
+import { motion } from "framer-motion";
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  Your content
+</motion.div>
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+<Tip>
+Experiment freely! All changes are immediately visible with Next.js Fast Refresh. Press `Ctrl+C` in the terminal to stop the dev server anytime.
+</Tip>
