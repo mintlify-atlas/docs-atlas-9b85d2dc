@@ -1,0 +1,86 @@
+{
+  "projectType": "frontend",
+  "projectName": "Pengrafic",
+  "projectDescription": "A modern Next.js landing page template for marketing agencies and creative businesses.",
+  "theme": "palm",
+  "primaryColor": "#4A6CF7",
+  "lightColor": "#F0F2F9",
+  "darkColor": "#111b33",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "introduction",
+          "installation",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/overview",
+          "components/hero",
+          "components/features",
+          "components/about",
+          "components/testimonials",
+          "components/pricing",
+          "components/blog",
+          "components/contact"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "customization/theming",
+          "customization/colors",
+          "customization/typography",
+          "customization/layout"
+        ]
+      },
+      {
+        "group": "Features",
+        "pages": [
+          "features/dark-mode",
+          "features/authentication",
+          "features/responsive-design",
+          "features/seo"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/overview",
+          "deployment/vercel",
+          "deployment/netlify"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Next.js 14 with App Router",
+    "TypeScript support",
+    "Tailwind CSS styling",
+    "Dark/Light mode with next-themes",
+    "Framer Motion animations",
+    "Supabase authentication integration",
+    "Responsive design",
+    "SEO optimized",
+    "Reusable React components"
+  ],
+  "publicApiSurface": [
+    "Hero component",
+    "Features component",
+    "AboutSectionOne component",
+    "AboutSectionTwo component",
+    "Testimonials component",
+    "Pricing component",
+    "Blog component",
+    "Contact component",
+    "Header component",
+    "Footer component",
+    "Video component",
+    "Brands component",
+    "ScrollUp component"
+  ]
+}
